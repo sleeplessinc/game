@@ -1,0 +1,11 @@
+
+<script>
+function send(a, o)
+{
+	document.location = "/hags?func=input&sid="+sid+"&cmd="+a+"&obj="+o;	
+}
+</script>
+
+<center>
+<input type=button value="Look" onClick="send('look', '')">
+
