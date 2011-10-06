@@ -103,7 +103,7 @@ function Bag()
 	this.insert = function(what) {
 		var c = this.items;
 		for(var i = 0; i < c.length; i++) {
-			if(c[i] == what)
+			if(c[i] == what)	// xxx use === ?
 				return false;
 		}
 		c.push(what);
@@ -115,6 +115,7 @@ function Bag()
 		var c = this.items;
 		for(var i = 0; i < c.length; i++) {
 			if(c[i] == what) {
+				// xxx use splice
 				if(c.length > 1) {
 					c[i] = c[c.length - 1];
 				}
