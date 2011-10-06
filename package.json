@@ -1,6 +1,6 @@
 {
   "name": "game",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description" : "A simple adventure game",
   "author": "Joe Hitchens <joe@sleepless.com> (sleepless.com)",
   "license": {
