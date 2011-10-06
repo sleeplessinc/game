@@ -180,7 +180,7 @@ function input(tags, vals)
 	//T("input("+tags+","+vals+")");
 
 	wfile("docroot/head.html");
-	wfile("docroot/admin.html");
+	// xxx wfile("docroot/admin.html");
 
 
 	var sid = "";
