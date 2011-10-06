@@ -1,0 +1,16 @@
+
+
+Thing
+	name sword
+	desc this is your sword
+	detail	
+		It is a sturdy, though not particularly graceful weapon.
+		The blade is worn and rusty with many chips along the edge.
+		The hilt is tightly wrapped in old, worn leather.
+		A small, crude, rendering of your family crest is on the guard.
+		There is no other adornment on the weapon.
+	mass 1				// in kilograms
+	capacity 0			// in cubic meters
+	volume 0.3 			// in cubic meters
+
+
