@@ -179,8 +179,8 @@ function input(tags, vals)
 {
 	//T("input("+tags+","+vals+")");
 
-	wfile("head.html");
-	wfile("admin.html");
+	wfile("docroot/head.html");
+	wfile("docroot/admin.html");
 
 
 	var sid = "";
@@ -215,7 +215,7 @@ function input(tags, vals)
 	session.world.input(tags, vals);
 
 
-	wfile("tail.html");
+	wfile("docroot/tail.html");
 
 }
 

@@ -1,0 +1,229 @@
+
+body {
+	background-color: black;
+	/*
+	background-image: url("img/home-page-bg.gif");
+	background-repeat: no-repeat;
+	background-attachment: scroll;
+	*/
+	margin: 0px;
+	padding: 0px;
+}
+
+.bdy {
+	width: 600px;
+	font-family: "bookman antiqua", serif;
+	font-size: 10pt;
+	margin: 0px;
+	padding: 8px;
+	color: #eeddcc;
+	text-indent: 8px;
+}
+
+.title {
+	text-align: center;
+}
+
+.copr {
+	text-align: center;
+	font-size: 8pt;
+	color: #ccaa00;
+}
+
+a:link, a:active, a:visited {
+	color: #aacc00;
+	text-decoration: none;
+	/*
+	font-weight: bold;
+	text-decoration: underline;
+	*/
+	border: dotted 1px black;
+}
+
+a:hover {
+	/*
+	text-decoration: underline;
+	*/
+	color: #ccee00;
+	border: solid 1px #667700;
+}
+
+
+.boxtop {
+	border-top: solid 1px #bbaa99;
+	border-left: solid 1px #bbaa99;
+	border-right: solid 1px #bbaa99;
+	background-color: #665544;
+	color: #eeddcc;
+	font-size: 12pt;
+	text-align: center;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+.boxguts {
+	border: solid 1px #bbaa99;
+}
+
+.where {
+	border: solid 1px #bbaa99;
+	background-color: #665544;
+	color: #eeddcc;
+	font-size: 12pt;
+	text-align: center;
+}
+
+
+td {
+	vertical-align: top;
+	/*
+	font-family: "bookman antiqua", serif;
+	*/
+	font-size: 10pt;
+	color: #eeddcc;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin: 0px;
+	border-bottom: solid 1px #443322;
+}
+
+
+/*
+
+Font properties
+---------------
+	font-family: [[<family-name> | <generic-family>],]* [<family-name> | <generic-family>]
+		font-family: "book antiqua", serif;
+		font-family: "century gothic", sans-serif;
+		font-family: "vladimir script", cursive;
+		font-family: "hiphopdemi", fantasy;
+		font-family: "courier", monospace;
+	font-style: normal | italic | oblique
+	font-variant: normal | small-caps
+	font-weight: normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
+	font-size: <absolute-size> | <relative-size> | <length> | <percentage>
+		<absolute-size> = xx-small | x-small | small | medium | large | x-large | xx-large 
+		<relative-size> = larger | smaller
+	font: [ <font-style> || <font-variant> || <font-weight> ]? <font-size> [ / <line-height> ]? <font-family>
+		font: 12pt/14pt sans-serif
+		font: 80% sans-serif
+		font: x-large/110% "new century schoolbook", serif
+		font: bold italic large palatino, serif
+		font: normal small-caps 120%/120% fantasy
+
+Color and background properties
+-------------------------------
+	color: <color>
+	background-color: <color> | transparent
+	background-image: <url> | none
+	background-repeat: repeat | repeat-x | repeat-y | no-repeat
+	background-attachment: scroll | fixed
+	background-position: [<percentage> | <length>]{1,2} | [top | center | bottom] || [left | center | right]
+		background-position: 0% 0%		( = "top left")
+		background-position: 100% 100%	( = "bottom right") 
+		background-position: 14% 84%	(wherever)
+	background: <background-color> || <background-image> || <background-repeat> || <background-attachment> || <background-position>
+		background: url(chess.png) gray 50% repeat fixed
+
+Text properties
+---------------
+	word-spacing: normal | <length>
+	letter-spacing: normal | <length>
+	text-decoration: none | [ underline || overline || line-through || blink ]
+	vertical-align: baseline | sub | super | top | text-top | middle | bottom | text-bottom | <percentage>
+	text-transform: capitalize | uppercase | lowercase | none
+	text-align: left | right | center | justify
+	text-indent: <length> | <percentage>
+	line-height: normal | <number> | <length> | <percentage>
+
+Box properties
+--------------
+	margin-top: <length> | <percentage> | auto
+	margin-right: <length> | <percentage> | auto
+	margin-bottom: <length> | <percentage> | auto
+	margin-left: <length> | <percentage> | auto
+	margin: [ <length> | <percentage> | auto ]{1,4} 
+		(shorthand for setting 'margin-top', 'margin-right', 'margin-bottom' and 'margin-left')
+		margin: 2em 			all margins set to 2em 
+		margin: 1em 2em 		top & bottom = 1em, right & left = 2em 
+		margin: 1em 2em 3em		top=1em, right=2em, bottom=3em, left=2em
+
+	padding-top: <length> | <percentage>
+	padding-right: <length> | <percentage>
+	padding-bottom: <length> | <percentage>
+	padding-left: <length> | <percentage>
+	padding: [ <length> | <percentage> ]{1,4} 
+		(shorthand for 'padding-top', 'padding-right', 'padding-bottom' and 'padding-left')
+	border-top-width: thin | medium | thick | <length>
+	border-right-width: thin | medium | thick | <length>
+	border-bottom-width: thin | medium | thick | <length>
+	border-left-width: thin | medium | thick | <length>
+	border-width: [thin | medium | thick | <length>]{1,4}
+		(shorthand for 'border-width-top', 'border-width-right', 'border-width-bottom' and 'border-width-left')
+	border-color: <color>{1,4}
+	border-style: none | dotted | dashed | solid | double | groove | ridge | inset | outset
+	border-top: <border-top-width> || <border-style> || <color>
+		(shorthand for setting width, style and color of top border)
+		border-top: thick solid red 
+	border-right: <border-right-width> || <border-style> || <color>
+		(shorthand for setting width, style and color of right border)
+	border-bottom: <border-bottom-width> || <border-style> || <color>
+		(shorthand for setting width, style and color of bottom border)
+	border-left: <border-left-width> || <border-style> || <color>
+		(shorthand for setting the width, style and color of left border)
+	border: <border-width> || <border-style> || <color> 
+		(shorthand for setting same width, color and style on all four borders)
+		border: solid red
+	width: <length> | <percentage> | auto 
+	height: <length> | auto 
+		IMG.icon { height: 100px }
+	float: left | right | none
+		IMG.icon { 
+			float: left;
+			margin-left: 0;
+		}
+	clear: none | left | right | both
+		lists the sides where floating elements are not accepted. 
+
+Classification properties
+--------------------------
+	display: block | inline | list-item | none
+		value of 'none' makes an item invisible
+	white-space: normal | pre | nowrap
+	list-style-type: disc | circle | square | decimal | lower-roman | upper-roman | lower-alpha | upper-alpha | none
+	list-style-image: <url> | none
+	list-style-position: inside | outside
+	list-style: [disc | circle | square | decimal | lower-roman | upper-roman | lower-alpha | upper-alpha | none] || [inside | outside] || [<url> | none]
+		(shorthand for setting 'list-style-type', 'list-style-image' and 'list-style-position')
+		list-style: upper-roman inside
+		list-style: circle outside
+		list-style: square
+
+Units
+-----
+	Length units
+		H1 { margin: 0.5em }      ems, the height of the element's font 
+		H1 { margin: 1ex }        x-height, ~ the height of the letter 'x' 
+		P  { font-size: 12px }    pixels, relative to canvas 
+		H1 { margin: 0.5in }      inches, 1in = 2.54cm 
+		H2 { line-height: 3cm }   centimeters
+		H3 { word-spacing: 4mm }  millimeters 
+		H4 { font-size: 12pt }    points, 1pt = 1/72 in 
+		H4 { font-size: 1pc }     picas, 1pc = 12pt 
+	Percentage units
+		P { line-height: 120% }   120% of the element's 'font-size' 
+	Color units
+		BODY {color: black; background: white }
+		H1 { color: maroon }
+		H2 { color: olive }
+		EM { color: #f00 }              #rgb 
+		EM { color: #ff0000 }           #rrggbb 
+		EM { color: rgb(255,0,0) }      integer range 0 - 255 
+		EM { color: rgb(100%, 0%, 0%) } float range 0.0% - 100.0% 
+	URL
+		BODY { background: url(http://www.bg.com/pinkish.gif) }
+
+*/
+
