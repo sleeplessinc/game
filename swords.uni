@@ -1,0 +1,331 @@
+	
+place Death
+	You're dead.
+
+place Home
+	This is your home.
+	It is located high in the mountains nestled in an alpine
+	canyon and surrounded by majestic trees.
+	A meadow stretches out in front of your cabin and down the canyon.
+	You have always been at home in these woods and the
+	birds are always singing in this peaceful place.
+	There is a pathway leading to the south and another heading east.
+
+	exthing Cabin
+		The cabin is a wooden structure on a stone foundation.
+		Your father built it when you were a young lad.
+
+	exthing A_carved_stone
+		It's a headstone.
+		Your father is buried here.
+		The stone reads, "Chadlar Hendud.  Strong to the last."
+
+	exit Into_the_Cabin Cabin
+	exit South River_Trail
+	exit East Town_Road
+	exit North Lookout
+
+place Cabin
+	The inside of your cabin is dry and comfortable, but somewhat spare.
+
+	exthing Sword
+		This is your sword.
+		It is a sturdy, though not particularly graceful weapon.
+		The blade is worn and rusty with many chips along the edge.
+		The hilt is tightly wrapped in old, worn leather.
+		A small, crude rendering of your family crest is on the guard.
+		There is no other adornment on the weapon.
+
+	exit Outside Home
+	exit Out_the_back_door Behind_Cabin
+
+place Lookout
+	You are at a place you call the "lookout".
+	It's your favorite place to think.
+	It is high up on a ridge overlooking your house.
+	You can see for miles around from here.
+	Far off to the south east, you see a dark, ragged mountain peak.
+	The only pathway leads south toward your cabin.
+
+	exit South Home
+	exit Over_the_cliff Death
+
+place Town_Road
+	This is the dirt road leading to the town of Uzeem which
+	is the closest village to your home.
+	The road continues east and levels out as it drops out of the canyon
+	and the pines.
+
+	exit West Home
+	exit East Uzeem
+
+place Uzeem
+	You are in the town square of Uzeem.
+	Uzeem boasts several hundred inhabitants and is a generally busy
+	place.
+	There is a tavern and stable on the north side of the street
+	and a large paved area in the middle of the square.
+	The only source of water is a well at the center of the paved
+	area.
+	There is a road to the west and another leading south.
+
+	exit Into_the_tavern Tavern
+	exit West Town_Road
+	exit South Stuggum_Bridge
+
+	exthing Well
+		The well is not particularly interesting.
+
+place Tavern
+	This is the "Hawk and pidgeon", the only tavern in Uzeem
+	and a very popular place.
+	You see a few friends and people from around the area.
+
+	exit Outside Uzeem
+
+place River_Trail
+	You are on what you call the 'river trail'.
+	There is good fishing in some spots here.
+	It runs along the north bank of the Hoopty river.
+	There is good fishing in some spots here.
+	A pathway leads up through the trees to the north.
+
+	exit North Home
+	exit East Witch's_Home
+
+	exthing Tree_stump
+		The tree stump is old and mostly rotted away.
+		You used to play on and around it as a child.
+		Those were happy times.
+
+place Witch's_Home
+	You are at the old Witch's house.
+	She's not really a witch, she's a dear friend of the family.
+	Everyone else around thinks she is a witch because her behavior
+	is a little strange, but you know that she is a wise woman
+	with a huge heart. 
+
+	exit West River_Trail
+	exit Into_the_house Witch's_House
+
+	exthing House
+		The house is not very large and not very straight.
+		It is made partially of stone, partially of wood and partially
+		of the trees and plants surrounding it.
+		There is no door on the structure.
+		Friends are free to come and go as they please.
+
+place Witch's_House
+	You are inside the old witch's house.
+
+	exit Outside Witch's_Home
+
+	exthing Witch
+		The witch is sitting at a table making something out of
+		reeds and pebbles she has apparently collected from the river.
+		It's a very peculiar looking object.
+
+place Stuggum_Bridge
+	You are at the Stuggum Bridge which crosses the Hoopty river.
+	The bridge is large enough to carry a horse and cart.
+	The water below is clear, clean and cold.
+	There is a refreshing breeze coming over the bridge.
+
+	exthing Tollman
+		The tollman's name is Valdred and he is very old.
+		He's been working on this bridge for as long as you can remember.
+		He is wearing an orange coat and a moldy hat.
+		There is a sign above him that reads, "5 G."
+	
+	exit North Uzeem
+	exit South South_Road
+
+place South_Road
+	This the road south of the bridge.
+	It's a fairly wide track, though not heavily used much anymore.
+	The road runs north and south.
+
+	exit North Stuggum_Bridge
+	exit South Rustwood_Entrance
+
+place Rustwood_Entrance
+	You are at the entrance to Rustwood.
+	Few people venture into the wood and those who do tell
+	many stories of fantastic apparitions and monsters within.
+	The trees are dense and rise up to a great height.
+	You can not see very far into the trees because of the darkness within.
+	A road leads away to the north. and curves to the southeast as it
+	enters the trees of the forest.
+
+	exit North South_Road
+	exit Southeast Rustwood
+
+place Rustwood
+	You are deep in the forest of Rustwood.
+	The light is dim and you hear all manner of curious
+	creatures scurrying about in the trees, out of sight.
+	the air is cool and wet.
+	A path leads to the northwest.
+	To the southeast, the path splits.
+	One fork leads east, the other south.
+
+	exit Northwest Rustwood_Entrance
+	exit South Faenglin
+	exit East Polly_Wijjit
+
+place Faenglin
+	This place is known as Faenglin.
+	You recognize it from stories you've heard told in Uzeem.
+	The trees are thinner and lighter.
+	The air less oppressive and warmer.
+	The stones and vegetation have a yellowish tint to them.
+	There are small insects fluttering lazily in the
+	shafts of light filtering through the tree branches.
+	The are exits to the northwest and southeast along the trail.
+
+	exit Northwest Rustwood
+	exit Southeast Tree_Fork
+
+place Tree_Fork
+	You are at a fork in the road.
+	the trail runs completely around a massive oak tree with
+	three paths radiating out to the northwest, southwest and east.
+
+	exit Southwest Red_Gate
+	exit Northwest Faenglin
+	exit East Midglen
+
+	exthing Tree
+		The tree is absolutely massive.
+		You estimate it's trunk to be at least 30 feet around at the base.
+		It soars up from the trunk, the branches splitting and twisting
+		as the continue up and over your head creating an enormous
+		canopy that is like nothing you've ever seen.
+
+place Midglen
+	You are in wide, shallow glen.
+	The area is covered with a low, delicate tree you've never
+	seen before.
+	The trees have slender trunks and tiny leaves.  The canopy
+	of branches above you is complete, yet thin enough that most
+	of the sunlight comes through, creating a brilliant emerald
+	green world underneath.
+
+	exit West Tree_Fork
+	exit Northeast Water_Caves_Entrance
+	exit South Long_Branch
+
+place Long_Branch
+	You are in a very old, dark, green part of the forest.
+	It is very damp here and there is moss covering almost everything.
+	The only sounds you hear are the dripping and gurgling of
+	tiny rivulets that meander through the rocks and undergrowth.
+
+	exit North Midglen
+
+place Water_Caves_Entrance
+	You are the at the West entrance to the water caves.
+	There is a path leading to the west.
+	There is also a large dark cave entrance on a low hillside.
+
+	exit West Midglen
+	exit Down Water_Caves
+
+place Water_Caves
+	You are in the water caves.
+	A tunnel leads up and another leads deeper into the caves.
+	It's almost completely dark.
+
+	exit Up Water_Caves_Entrance
+	exit Down Death
+
+place Red_Gate
+	You are the Red Gate.
+	There are two thick, menacing, stone pillars on either side of the
+	road that you must pass between.
+	Looking through the gate to the south, the road continues
+	for a short distance, then curves to the left and out of sight.
+
+	exit South Stairs
+	exit North Tree_Fork
+
+	exthing Pillars	
+		The pillars are clearly very old.
+		They are roughly rectangular, with a steep taper.  
+		They are made from heaped up reddish gray stones.
+		The years have not been kind to the pillars as they
+		are cracked, weathered and in extreme disrepair.
+
+place Stairs
+	You are on the side of the mountain on a path that
+	zig-zags up the side.
+	The path was apparently a stairway when it was made,
+	but is do badly weathered and decayed that some portions
+	of the stairway are completely missing or worn away.
+	The footing is treacherous and there isn't much to hold on to,
+	but the view magnificent.
+	Far to the northwest you can see the mountains of your home.
+
+	exit Down Red_Gate
+	exit Up Vonhorn_Summit
+
+place Vonhorn_Summit
+	You are the summit of the mountain.
+	Before you is Vonhorn Keep.
+	An ancient castle that is still a magnificent sight even
+	though it appears long abandoned.
+
+	exit Down Stairs
+	exit Into_the_Keep Keep
+
+place Keep
+	You are in the main hall of the Keep.
+	Above you, the sky can be seen through many large holes in what
+	was once a complete roof but now is about half missing.
+	The great timbers that once held up the roof are strewn about
+	the great hall along with collapsed portions of the walls.
+	There are some trees and bushes growing in the corners and working
+	inexorably to crack and crush the Keep to dust.
+	A large bird perches high up on a broken portion of the outer wall.
+
+	exit Outside Vonhorn_Summit
+
+	exthing Hawk
+		The bird is a large brown halk with white eyes.
+		It is looking at you in a curious, yet knowing manner.
+
+
+place Polly_Wijjit
+	You are in a large clearing.
+	There is a house in the center of the clearing that appears to
+	have legs.
+	The legs are in fact trees.
+	There is a path leading into the trees to the west and another
+	leading east.
+
+	exit West Rustwood
+	exit East Blue_Falls
+
+	exthing Tree_House
+		The house is suspended between 3 trees and sits at
+		a most uncomfortable looking random tilt.
+		The trees grow up and around the house on 3 sides continuing
+		up into the air.  A roughly made ladder about 12 feet high
+		is propped against the house providing a way up and into the
+		front door.
+
+place Blue_Falls
+	You are the edge of a river, high up on an overgrown ledge
+	with a spectacular view of a waterfall.  
+	The falls are only about 60 feet in height but impressive mostly
+	for the sheer volume of water passing over them and the gigantic,
+	sharp, squarish boulders over which the water leaps and churns
+	as it roars down the canyon.
+	The water and, in fact, the entire scene seems to have a slightly
+	bluish tint to it.
+	The sound is deafening.
+	A path leads west into the trees.
+	
+	exit West Polly_Wijjit
+	exit Into_the_falls Death
+
