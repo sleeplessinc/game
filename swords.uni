@@ -1,6 +1,6 @@
 
 place Death
-	You're dead.
+	You are dead.
 
 place Home
 	This is your home.
@@ -38,6 +38,12 @@ place Cabin
 
 	exit Outside Home
 	exit Out_the_back_door Behind_Cabin
+
+place Behind_Cabin
+	You are behind the cabin. 
+	There is nothing interesting here
+
+	exit Into_the_Cabin Cabin
 
 place Lookout
 	You are at a place you call the "lookout".
