@@ -1,14 +1,9 @@
 
-//var http = require("http")
-
-
-function jsend(a, o, l)
-{
+function jsend(a, o, l) {
 	return "<a href='javascript:send(\""+a+"\",\""+o+"\")'>"+l+"</a>\n";
 }
 
-function Thing(tag, desc)
-{
+function Thing(tag, desc) {
 	this.tag = tag;
 	this.toString = function() { return this.tag; }
 	this.name = function(who) { return this.tag; }
@@ -16,17 +11,18 @@ function Thing(tag, desc)
 
 // An examinable thing
 function ExThing(tag, desc) { this.base = Thing; this.base(tag);
-	this.desc = "<p>The "+this+" appears unremarkable.";
-	if(desc != undefined)
-		this.desc = desc;
-	this.onExamine = function(who) { wbr(desc); }
+	this.desc = desc || "<p>The "+this+" appears unremarkable."
+	this.onExamine = function(who) { wbr(this.desc); }
 }
 
-function Exit(tag, dest) { this.base = Thing; this.base(tag);
+function Exit(tag, dest) {
+	this.base = Thing;
+	this.base(tag);
 	this.dest = dest;
 	this.traverse = function(who) {
 		var nplace = world.places.find(dest);
-		if(nplace == null) throw "No such place: "+dest;
+		if(nplace == null)
+			throw "No such place: "+dest;
 		world.player.place = nplace;
 		wbr("You go "+this.tag+" ...");
 		wbr("");
@@ -35,14 +31,18 @@ function Exit(tag, dest) { this.base = Thing; this.base(tag);
 	}
 }
 
-function Place(tag, desc) { this.base = Thing; this.base(tag);
+function Place(tag, desc) {
+	this.base = Thing;
+	this.base(tag);
 
 	this.onLook = function(who) { wbr(desc); }
 	this.exits = new Bag();
 	this.things = new Bag();
 }
 
-function Player(tag, world) { this.base = Thing; this.base(tag);
+function Player(tag, world) {
+	this.base = Thing;
+	this.base(tag);
 
 	this.world = world;
 
@@ -50,8 +50,7 @@ function Player(tag, world) { this.base = Thing; this.base(tag);
 
 	this.onLook = function(who) { this.place.onLook(this); }
 
-	this.menu = function()
-	{
+	this.menu = function() {
 		w("<div class=where>"+this.place.name()+"</div>");
 
 		table(); tr();
@@ -85,16 +84,13 @@ function Player(tag, world) { this.base = Thing; this.base(tag);
 			table();
 			len = this.place.things.items.length;
 			var items = this.place.things.items;
-			for(var i = 0; i < len; i++)
-			{
+			for(var i = 0; i < len; i++) {
 				var t = items[i];
 				tr();
 				td();
 				w(""+t+" - ");
-				for(var f in t)
-				{
-					if((typeof t[f] == "function") && (f.substring(0,2) == "on"))
-					{
+				for(var f in t) {
+					if((typeof t[f] == "function") && (f.substring(0,2) == "on")) {
 						var h = f;
 						var d = f.substring(2);
 						var l = "<a href='javascript:send(\""+h+"\",\""+t+"\")'>"+d+"</a>";
@@ -138,10 +134,8 @@ function Player(tag, world) { this.base = Thing; this.base(tag);
 		td();
 			w(beg_box("What You Can Do"));
 			table();
-			for(var f in this)
-			{
-				if((typeof this[f] == "function") && (f.substring(0,2) == "on"))
-				{
+			for(var f in this) {
+				if((typeof this[f] == "function") && (f.substring(0,2) == "on")) {
 					tr();
 					td();
 
@@ -165,8 +159,7 @@ function Player(tag, world) { this.base = Thing; this.base(tag);
 			table();
 			len = this.place.exits.items.length;
 			var items = this.place.exits.items;
-			for(var i = 0; i < len; i++)
-			{
+			for(var i = 0; i < len; i++) {
 				tr();
 				td();
 				var dir = items[i].name();
@@ -186,32 +179,27 @@ function Player(tag, world) { this.base = Thing; this.base(tag);
 
 }
 
-function uniLoad(file, places)
-{
+function uniLoad(file, places) {
 	var plc = null;
 	var ext = null;
 	var thg = null;
 
 	var con = e_file_contents(file);
 	var lines = con.split("\n");
-	for(var i = 0; i < lines.length; i++)
-	{
+	for(var i = 0; i < lines.length; i++) {
 		var line = trim(lines[i]);	// remove leading and trailing whitespace
 		line = crush(line);			// compress whitespace
 		//w("line: '"+line+"'<br>\n");
 		var words = line.split(" ");
 		var cmd = words[0].toLowerCase();
-		for(var j = 0; j < words.length; j++)
-		{
+		for(var j = 0; j < words.length; j++) {
 			words[j] = trim(words[j]);
 			words[j] = words[j].replace(/_/g, " ");
 		}
-		if(words[0] == "place")
-		{
+		if(words[0] == "place") {
 			var dsc = "";
 			i++;
-			while(i < lines.length)
-			{
+			while(i < lines.length) {
 				var l2 = trim(lines[i]);
 				//w("l2: '"+l2+"'<br>\n");
 				if(l2 == "")
@@ -224,13 +212,11 @@ function uniLoad(file, places)
 			places.insert(plc);
 		}
 		else
-		if(words[0] == "exthing")
-		{
+		if(words[0] == "exthing") {
 			if(plc == null) throw "No place to store new exthing!";
 			var dsc = "";
 			i++;
-			while(i < lines.length)
-			{
+			while(i < lines.length) {
 				var l2 = trim(lines[i]);
 				//w("l2: '"+l2+"'<br>\n");
 				if(l2 == "")
@@ -243,8 +229,7 @@ function uniLoad(file, places)
 			//w("-- created exthing: "+thg+"<br>\n"); 
 		}
 		else
-		if(words[0] == "exit")
-		{
+		if(words[0] == "exit") {
 			if(plc == null) throw "No place to store new exthing!";
 			ext = new Exit(words[1], words[2]);
 			plc.exits.insert(ext);
@@ -253,28 +238,24 @@ function uniLoad(file, places)
 	}
 }
 
-function createPlaces()
-{
+function createPlaces() {
 	var places = new Bag();
 	uniLoad("swords.uni", places);
 	return places;
 }
 
 
-function World(session)
-{
+function World(session) {
 	this.session = session;
 	this.places = createPlaces(this);
 	this.player = new Player("Player", this);
 
-	this.input = function(tags, vals)
-	{
+	this.input = function(tags, vals) {
 		var plyr = this.player;
 
 		var cmd = "";
 		var obj = "";
-		for(var i = 0; i < tags.length; i++)
-		{
+		for(var i = 0; i < tags.length; i++) {
 			if(tags[i] == "cmd")
 				cmd = vals[i];
 			else
@@ -284,42 +265,35 @@ function World(session)
 
 		//T("cmd="+cmd+" obj="+obj);
 
-		if(cmd != "")
-		{
-			if(cmd == "go")
-			{
+		if(cmd != "") {
+			if(cmd == "go") {
 				// Attempting to "go" somewhere.  Look for specified exit.
 				var plc = plyr.place;
 				var len = plc.exits.items.length;
 				var items = plc.exits.items;
-				for(var i = 0; i < len; i++)
-				{
+				for(var i = 0; i < len; i++) {
 					if(obj == items[i].name())
 						items[i].traverse(plyr);
 				}
 			}
 			else
-			if(obj != "")
-			{
+			if(obj != "") {
 				// We're operating on an object.
 				// Look for an object with the given name and if found, 
 				// call the action handler on that object.
 				var t = null; // XXX plyr.pack.find(obj);
-				if(t == null)
-				{
+				if(t == null) {
 					t = plyr.place.things.find(obj);
 					if(t != null)
 					{
 						//T("(found in place)");
 					}
 				}
-				else
-				{
+				else {
 					//T("(found in pack)");
 				}
 
-				if(t != null)
-				{
+				if(t != null) {
 					//T("(got obj to operate on: "+t+")");
 					wbr("");
 					t[cmd](plyr);
@@ -327,8 +301,7 @@ function World(session)
 				}
 
 			}
-			else
-			{
+			else {
 				// No object to operate on.
 				// Look for action handler in player object.
 				wbr("");
@@ -337,15 +310,13 @@ function World(session)
 			}
 		}
 
-		if(plyr.place.name() == "Death")
-		{
+		if(plyr.place.name() == "Death") {
 			sessions.remove(session);
 			wbr("");
 			wbr(centered("<a href=\".\">Play Again</a>"));
 			wbr("");
 		}
-		else
-		{
+		else {
 			plyr.menu();
 		}
 

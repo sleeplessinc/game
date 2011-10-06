@@ -12,33 +12,27 @@ function crush(s) {
 }
 
 function trim(s) {
-	s = s.replace(/^\s+/g, "");		// remove leading whitespac3
+	return s.trim()
+	/*s = s.replace(/^\s+/g, "");		// remove leading whitespac3
 	s = s.replace(/\s+$/g, "");		// remove trailing whitespac3
-	return s;
+	return s;*/
 }
 
 function startsWith(s1, s2) {
-	if(s1.substr(0, s2.length) == s2)
-		return true;
-	return false;
+	return s1.substr(0, s2.length) == s2
 }
 
 ///////////////////////////
 
-function w(s)
-{
+function w(s) {
 	e_output(s);
 }
 
-function wbr(s)
-{
-	w(s);
-	w("<br>\n");
+function wbr(s) {
+	w(s+"<br>\n");
 }
 
-
-function wfile(f)
-{
+function wfile(f) {
 	w(e_file_contents(f));
 }
 
@@ -101,17 +95,14 @@ function Bag()
 {
 	this.items = [];
 
-	this.toString = function()
-	{ 
+	this.toString = function() { 
 		return this.items.toString();
 	}
 
 	// Returns true if 'what' was placed inside of this thing
-	this.insert = function(what)
-	{
+	this.insert = function(what) {
 		var c = this.items;
-		for(var i = 0; i < c.length; i++)
-		{
+		for(var i = 0; i < c.length; i++) {
 			if(c[i] == what)
 				return false;
 		}
@@ -120,15 +111,11 @@ function Bag()
 	}
 
 	// Returns true if 'what' was removed from inside of this thing
-	this.remove = function(what)
-	{
+	this.remove = function(what) {
 		var c = this.items;
-		for(var i = 0; i < c.length; i++)
-		{
-			if(c[i] == what)
-			{
-				if(c.length > 1)
-				{
+		for(var i = 0; i < c.length; i++) {
+			if(c[i] == what) {
+				if(c.length > 1) {
 					c[i] = c[c.length - 1];
 				}
 				c.pop();
@@ -140,14 +127,11 @@ function Bag()
 
 	// Returns the object with the given tag that is inside of this thing
 	// or null of there is no such object inside.
-	this.find = function(tag)
-	{
+	this.find = function(tag) {
 		var c = this.items;
-		for(var i = 0; i < c.length; i++)
-		{
+		for(var i = 0; i < c.length; i++) {
 			var nn = ""+c[i];
-			if(c[i].tag == tag)
-			{
+			if(c[i].tag == tag) {
 				return c[i];
 			}
 		}
@@ -168,15 +152,13 @@ eval(e_file_contents("swords.js"));
 
 // Session handling
 sessions = new Bag();
-function Session(g)
-{
+function Session(g) {
 	this.tag = new Date().getTime();		// a unique session id
 }
 
 
 // Main input function
-function input(tags, vals)
-{
+function input(tags, vals) {
 	//T("input("+tags+","+vals+")");
 
 	wfile("docroot/head.html");
@@ -186,37 +168,30 @@ function input(tags, vals)
 	var sid = "";
 	var cmd = "";
 	var obj = "";
-	for(var i = 0; i < tags.length; i++)
-	{
-		if(tags[i] == "sid")
-		{
+	for(var i = 0; i < tags.length; i++) {
+		if(tags[i] == "sid") {
 			sid = vals[i];
 			break;
 		}
 	}
 
 	var session = sessions.find(sid);
-	if((sid == "") || (session == null))
-	{
+	if((sid == "") || (session == null)) {
 		session = new Session();
 		session.world = new World(session);
 		sessions.insert(session);
 		sid = session.tag;
 		//T("new session: "+sid);
 	}
-	else
-	{
+	else {
 		//T("found session: "+sid);
 	}
 	world = session.world;
 
-
 	// pass input on to the game world
 	session.world.input(tags, vals);
 
-
 	wfile("docroot/tail.html");
-
 }
 
 
