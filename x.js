@@ -2,8 +2,7 @@
 var log = console.log
 var util = require("util")
 
-log("-----------------");
-
+log("\n\n");
 
 function Bag() {
 	this.put = function(o) {
@@ -33,14 +32,21 @@ Bag.prototype = new Array()
 
 
 function Thing(name) {
+	log("Thing("+name+")")
+
+	var caller = arguments.callee.caller
+	while(caller.name) {
+		this.type = caller.name
+		caller = caller.caller
+		log(this.type+"()...")
+	}
+
 	this.name = name || "thing"
 
 	this.react = function(action, actor) {
 		var a = action[0].toUpperCase() + action.substr(1)
 		var f = this["on"+a]
-		if(f)
-			return f.call(this, actor)
-		return null
+		return f.call(this, actor)
 	}
 
 	this.onStudy = function(it) {
@@ -49,16 +55,9 @@ function Thing(name) {
 
 }
 
-function init(a) {
-	this.type = a.callee.name.toLowerCase()
-	a = Array.prototype.slice.call(a)
-	this.ctorArgs = a
-	Thing.apply(this, a)
-}
-
 
 function Place(name, desc) {
-	init.call(this, arguments)
+	Thing.apply(this, arguments)
 
 	this.desc = desc
 	this.things = new Bag()
@@ -76,7 +75,7 @@ function Place(name, desc) {
 
 
 function Adventurer(name) {
-	init.call(this, arguments)
+	Thing.apply(this, arguments)
 
 	this.pack = new Bag()
 	this.armor = null
@@ -130,7 +129,7 @@ function Adventurer(name) {
 
 
 function Treasure(name) {
-	init.call(this, arguments)
+	Thing.apply(this, arguments)
 
 	this.onTake = function(actor) {
 		actor.pack.put(this)
@@ -146,9 +145,9 @@ function Treasure(name) {
 
 
 function Scroll(name) {
-	init.call(this, arguments)
+	Treasure.apply(this, arguments)
 
-	this.onRead = function(it) {
+	this.onRead = function(actor) {
 		log("Nothing happens")
 	}
 
@@ -156,7 +155,7 @@ function Scroll(name) {
 
 
 function Armor(name) {
-	init.call(this, arguments)
+	Treasure.apply(this, arguments)
 
 	this.onWear = function(actor) {
 		actor.armor = this
@@ -167,7 +166,7 @@ function Armor(name) {
 
 
 function Weapon(name) {
-	init.call(this, arguments)
+	Treasure.apply(this, arguments)
 
 	this.onWield = function(actor) {
 		actor.weapon = this
@@ -175,22 +174,20 @@ function Weapon(name) {
 	}
 
 }
-Weapon.prototype = new Treasure()
 
 
 function Monster(name) {
-	init.call(this, arguments)
+	Thing.apply(this, arguments)
 
 	this.onAttack = function(it) {
 		log(this.name+" laughs at your feeble aggression")
 	}
 
 }
-Monster.prototype = new Thing()
 
 
 
-adventurer = new Adventurer("Joe")
+you = new Adventurer("Joe")
 place = new Place("Home", "A cabin in a meadow")
 monster = new Monster("Glarnmaggle")
 scroll = new Scroll("Aclirew")
@@ -204,14 +201,25 @@ place.things.put(scroll)
 place.things.put(armor)
 place.things.put(weapon)
 
-adventurer.study(adventurer)
-adventurer.study(place)
-adventurer.study(monster)
-adventurer.read(scroll)
-adventurer.attack(monster)
-adventurer.take(treasure)
-adventurer.study(treasure)
-adventurer.drop(treasure)
+you.study(you)
+you.study(place)
+you.study(monster)
+
+you.attack(monster)
+
+you.take(scroll)
+you.read(scroll)
+
+you.take(treasure)
+you.study(treasure)
+
+you.drop(treasure)
+
+you.take(armor)
+you.take(weapon)
+you.wield(weapon)
+you.wear(armor)
+
 
 
 /*
