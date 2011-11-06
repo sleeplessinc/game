@@ -2,7 +2,6 @@
 var log = console.log
 var util = require("util")
 
-log("\n\n");
 
 // a thing for holding stuff
 function Bag() {
@@ -31,28 +30,32 @@ function Bag() {
 Bag.prototype = new Array()
 
 
-function Thing(name) {
-	log("Thing("+name+")")
 
+var places = {}
+
+
+
+function Thing(name) {
 	var t = new Object()
 
 	// set type by walking up the caller chain
 	// the function that creates things must be an unnamed function for this to work
-	var caller = arguments.callee.caller
-	while(caller.name) {
-		t.type = caller.name
-		caller = caller.caller
+	var c = arguments.callee.caller
+	while(c.name) {
+		t.type = c.name
+		c = c.caller
 	}
+	t.type = (t.type || "thing").toLowerCase()
 
 	t.name = name || "thing"
 
-	t.react = function(action, actor) {
+	t.react = function(action, args) {
 		var a = action[0].toUpperCase() + action.substr(1)
 		var f = this["on"+a]
-		return f.call(this, actor)
+		return f.apply(this, args)
 	}
 
-	t.onStudy = function(it) {
+	t.onStudy = function(actor) {
 		log(t.name+" appears to be an ordinary "+t.type)
 	}
 
@@ -62,18 +65,42 @@ function Thing(name) {
 
 function Place(name, desc) {
 	var t = new Thing(name)
-	//Thing.apply(this, arguments)
 
 	t.desc = desc
 	t.things = new Bag()
+	t.exits = {}
 
-	t.onStudy = function(it) {
+	t.onStudy = function(actor) {
 		log("You are in a place called "+t.name)
 		log(t.desc)
 		log("You see "+t.things.length+" things:")
 		t.things.forEach(function(t, i) {
 			log("    "+(i+1)+": A "+t.type+" named "+t.name)
 		})
+		log("You see these exits:")
+		for(k in t.exits) {
+			var e = t.exits[k]
+			log("    "+e.name)
+		}
+	}
+
+	places[name] = t
+
+	return t
+}
+
+function Exit(name, dest) {
+	var t = new Thing(name)
+
+	t.dir = name.toLowerCase()
+	t.dest = dest
+
+	t.onGo = function(traveler) {
+		var newPlace = places[t.dest]
+		newPlace.traveler = traveler
+		traveler.place = newPlace
+		log("Went to "+newPlace.name)
+		traveler.study(newPlace)
 	}
 
 	return t
@@ -82,7 +109,6 @@ function Place(name, desc) {
 
 function Adventurer(name) {
 	var t = new Thing(name)
-	//Thing.apply(this, arguments)
 
 	t.place = null
 	t.pack = new Bag()
@@ -91,38 +117,44 @@ function Adventurer(name) {
 
 	t.study = function(it) {
 		log("study("+it.type+")")
-		it.react("study", t)
+		it.react("study", [t])
+	}
+
+	t.go = function(dir) {
+		var it = t.place.exits[dir]
+		log("go("+it.type+")")
+		it.react("go", [t])
 	}
 
 	t.read = function(it) {
 		log("read("+it.type+")")
-		it.react("read", t)
+		it.react("read", [t])
 	}
 
 	t.attack = function(it) {
 		log("attack("+it.type+")")
-		it.react("attack", t)
+		it.react("attack", [t])
 	}
 
 	t.wear = function(it) {
 		log("wear("+it.type+")")
-		it.react("wear", t)
+		it.react("wear", [t])
 	}
 
 	t.wield = function(it) {
 		log("wield("+it.type+")")
-		it.react("wield", t)
+		it.react("wield", [t])
 	}
 
 	t.take = function(it) {
 		log("take("+it.type+")")
-		it.react("take", t)
+		it.react("take", [t])
 		t.showPack()
 	}
 
 	t.drop = function(it) {
 		log("drop("+it.type+")")
-		it.react("drop", t)
+		it.react("drop", [t])
 		t.showPack()
 	}
 
@@ -139,7 +171,6 @@ function Adventurer(name) {
 
 function Treasure(name) {
 	var t = new Thing(name)
-	//Thing.apply(this, arguments)
 
 	t.onTake = function(actor) {
 		if(actor.place.things.get(t)) {
@@ -161,7 +192,6 @@ function Treasure(name) {
 
 function Scroll(name) {
 	var t = new Treasure(name)
-	//Treasure.apply(this, arguments)
 
 	t.onRead = function(actor) {
 		log("Nothing happens")
@@ -171,9 +201,19 @@ function Scroll(name) {
 }
 
 
+function Potion(name) {
+	var t = new Treasure(name)
+
+	t.onQuaff = function(actor) {
+		log("Nothing happens")
+	}
+
+	return t
+}
+
+
 function Armor(name) {
 	var t = new Treasure(name)
-	//Treasure.apply(this, arguments)
 
 	t.onWear = function(actor) {
 		actor.armor = t
@@ -186,7 +226,6 @@ function Armor(name) {
 
 function Weapon(name) {
 	var t = new Treasure(name)
-	//Treasure.apply(this, arguments)
 
 	t.onWield = function(actor) {
 		actor.weapon = t
@@ -199,33 +238,50 @@ function Weapon(name) {
 
 function Monster(name) {
 	var t = new Thing(name)
-	//Thing.apply(this, arguments)
 
-	t.onAttack = function(it) {
-		log(t.name+" laughs at your feeble aggression")
+	t.onAttack = function(attacker) {
+		log(t.name+" laughs at the aggressive actions of "+attacker.name)
 	}
 
 	return t
 }
 
 
-log("---- creating stuff ---")
+log("\n\n");
+
 foo = function() {
-	you = new Adventurer("Joe")
+
+	log("---- creating stuff ---")
+
+	place = new Place("The stream", "A clear, cold, mountain stream")
+	north = new Exit("North", "Home")
+	place.exits[north.dir] = north
+
 	place = new Place("Home", "A cabin in a meadow")
+	south = new Exit("south", "The stream")
+	place.exits[south.dir] = south
+
+	you = new Adventurer("Joe")
 	you.place = place
+	place.traveler = you
+
 	monster = new Monster("Glarnmaggle")
+	place.things.put(monster)
+
 	scroll = new Scroll("Aclirew")
+	place.things.put(scroll)
+
 	treasure = new Treasure("Gem")
+	place.things.put(treasure)
+
 	armor = new Armor("Leather armor")
+	place.things.put(armor)
+
 	weapon = new Weapon("Rusty sword")
+	place.things.put(weapon)
+
 } ; foo()
 
-place.things.put(monster)
-place.things.put(treasure)
-place.things.put(scroll)
-place.things.put(armor)
-place.things.put(weapon)
 
 log("---- doing stuff ---")
 you.study(you)
@@ -247,6 +303,10 @@ you.take(weapon)
 you.take(weapon)
 you.wield(weapon)
 you.wear(armor)
+
+
+you.go("south")
+you.go("north")
 
 
 
