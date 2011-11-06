@@ -1,39 +1,4 @@
 
-var log = console.log
-
-
-function Player() {
-
-	var self = this
-
-	self.study = function(o) {
-		if(o.mayStudy)
-			return o.mayStudy(self)
-		return "You find nothing interesting about it."
-	}
-
-
-}
-
-function Thing() {
-
-	var self = this
-
-	self.mayStudy = function(studier) {
-		if(studier instanceof Player)
-			return "A magic amulet"
-		return "A thing"
-	}
-
-
-}
-
-p = new Player()
-t = tnew Thing()
-
-log(p.study(t))
-
-
 /*
 World
 	A collection of Places.

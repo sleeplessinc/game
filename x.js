@@ -34,7 +34,6 @@ Bag.prototype = new Array()
 var places = {}
 
 
-
 function Thing(name) {
 	var t = new Object()
 
@@ -71,7 +70,7 @@ function Place(name, desc) {
 	t.exits = {}
 
 	t.onStudy = function(actor) {
-		log("You are in a place called "+t.name)
+		//log("You are in a place called "+t.name)
 		log(t.desc)
 		log("You see "+t.things.length+" things:")
 		t.things.forEach(function(t, i) {
@@ -99,8 +98,7 @@ function Exit(name, dest) {
 		var newPlace = places[t.dest]
 		newPlace.traveler = traveler
 		traveler.place = newPlace
-		log("Went to "+newPlace.name)
-		traveler.study(newPlace)
+		log("You've come to a placed called "+newPlace.name)
 	}
 
 	return t
@@ -110,10 +108,16 @@ function Exit(name, dest) {
 function Adventurer(name) {
 	var t = new Thing(name)
 
+	t.hp = 100	
+
 	t.place = null
 	t.pack = new Bag()
 	t.armor = null
 	t.weapon = null
+
+	t.look = function() {
+		t.study(t.place)
+	}
 
 	t.study = function(it) {
 		log("study("+it.type+")")
@@ -121,7 +125,12 @@ function Adventurer(name) {
 	}
 
 	t.go = function(dir) {
+		dir = dir.trim().toLowerCase()
 		var it = t.place.exits[dir]
+		if(!it) {
+			log("No exit "+dir)
+			return
+		}
 		log("go("+it.type+")")
 		it.react("go", [t])
 	}
@@ -129,6 +138,11 @@ function Adventurer(name) {
 	t.read = function(it) {
 		log("read("+it.type+")")
 		it.react("read", [t])
+	}
+
+	t.quaff = function(it) {
+		log("quaff("+it.type+")")
+		it.react("quaff", [t])
 	}
 
 	t.attack = function(it) {
@@ -205,7 +219,7 @@ function Potion(name) {
 	var t = new Treasure(name)
 
 	t.onQuaff = function(actor) {
-		log("Nothing happens")
+		log("You get the hiccups")
 	}
 
 	return t
@@ -240,7 +254,7 @@ function Monster(name) {
 	var t = new Thing(name)
 
 	t.onAttack = function(attacker) {
-		log(t.name+" laughs at the aggressive actions of "+attacker.name)
+		log("The "+t.name+" runs off, unharmed ")
 	}
 
 	return t
@@ -249,7 +263,7 @@ function Monster(name) {
 
 log("\n\n");
 
-foo = function() {
+init = function() {
 
 	log("---- creating stuff ---")
 
@@ -271,6 +285,9 @@ foo = function() {
 	scroll = new Scroll("Aclirew")
 	place.things.put(scroll)
 
+	potion = new Potion("Blue potion")
+	place.things.put(potion)
+
 	treasure = new Treasure("Gem")
 	place.things.put(treasure)
 
@@ -280,9 +297,10 @@ foo = function() {
 	weapon = new Weapon("Rusty sword")
 	place.things.put(weapon)
 
-} ; foo()
+} ; init()
 
 
+/*
 log("---- doing stuff ---")
 you.study(you)
 you.study(place)
@@ -292,6 +310,9 @@ you.attack(monster)
 
 you.take(scroll)
 you.read(scroll)
+
+you.take(potion)
+you.quaff(potion)
 
 you.take(treasure)
 you.study(treasure)
@@ -307,88 +328,49 @@ you.wear(armor)
 
 you.go("south")
 you.go("north")
-
-
-
-/*
-World
-	A collection of Places.
-	Worlds contain Places.
-
-Place
-	Represents a physical location in space where the adventurer currently "is".
-	Places contain Things.
-	Exits are "associated" with Places.
-	Example, a town, a road, a room, etc.
-
-Exit
-	Represents a link from one place to another.
-	There may be many associated with a Place leading to other Places.
-	The adventurer uses Exits to move around the World
-	Example: Trapdoor, pathway, tunnel
-
-Thing
-	A Thing is something that can:
-		* Be taken
-		* Be dropped
-	Example: Rock, sword, potion
-
-Monster
-	A Monster is something that can:
-		* Move around the world using Exits
-		* Attack 
-		* Be attacked
-		* Be killed
-	Monsters have properties:
-		* Strength ?
-		* HP ... ?
-
-Person
-	A Person is something that can:
-		* Move around the world using Exits
-		* Respond to questions
-
-Adventurer
-	A Adventurer is you.
-	You can:
-		* Move around the world using Exits
-		* Attack 
-		* Be attacked
-		* Be killed
-		* Take Things
-		* Drop Things
-		* Wield Weapons
-		* Wear Armor
-		* Read Scrolls
-		* Quaff Potions
-		* Utter Words
-
-Weapon
-	A Weapon is a Thing that can be wielded.
-	Wielding a weapon cause "attacking" to inflict greater damage on Monsters.
-	Example: Sword, Rock, Wand
-
-Armor
-	An Armor is a Thing that can be worn.
-	Wearing an Armor causes attack from Monsters to take less damage on you.
-	Example: Steel armor, Leather armor, Chain mail
-
-Potion
-	A Potion is a Thing that can be Quaffed.
-	Quaffing a potion will cause some sort of magical thing to happen to the adventurer.
-	Example: A green potion, A stinky potion.
-
-Scroll
-	A Scroll is a Thing that can be read.
-	Reading a scroll invokes a spell, which can have almost any affect on anything.
-	Example: Scroll called "Xlivik", Tattered scroll.
-
-Word
-	Words are not Things because they can not be Taken or Dropped.
-	They are simply text representing something that the adventurer can choose to say to a Person.
-	Words are associated with Persons.
-	Example: "Do you know where I can find a cursed dagger?", "Hello."
-
-
 */
+
+
+var readline = require('readline')
+var rl = readline.createInterface(process.stdin, process.stdout)
+var prefix = '\nSwords > '
+rl.setPrompt(prefix, prefix.length);
+
+function input(line) {
+	line = line.trim()
+	if(!line)
+		return
+
+	var m = line.match(/^([^\s]+)(\s([^\s]+))?/)
+
+	if(m) {
+		var verb = m[1]
+		var obj = m[2]
+
+		var f = you[verb]
+		if(f) {
+			f.call(you, obj)
+			return
+		}
+	}
+
+	log("What?")
+}
+
+function loop(line) {
+	input(line)
+	rl.prompt();
+}
+
+rl.on('line', function(line) {
+	loop(line)
+}).on('close', function() {
+	process.exit(0);
+});
+
+
+log("Swords - Copyright 2011 Sleepless Inc. - All Rights Reserved")
+loop("look")
+
+
 
