@@ -98,7 +98,7 @@ function Exit(name, dest) {
 		var newPlace = places[t.dest]
 		newPlace.traveler = traveler
 		traveler.place = newPlace
-		log("You've come to a placed called "+newPlace.name)
+		log("Location: "+newPlace.name)
 	}
 
 	return t
@@ -120,7 +120,7 @@ function Adventurer(name) {
 	}
 
 	t.study = function(it) {
-		log("study("+it.type+")")
+		//log("study("+it.type+")")
 		it.react("study", [t])
 	}
 
@@ -131,43 +131,43 @@ function Adventurer(name) {
 			log("No exit "+dir)
 			return
 		}
-		log("go("+it.type+")")
+		//log("go("+it.type+")")
 		it.react("go", [t])
 	}
 
 	t.read = function(it) {
-		log("read("+it.type+")")
+		//log("read("+it.type+")")
 		it.react("read", [t])
 	}
 
 	t.quaff = function(it) {
-		log("quaff("+it.type+")")
+		//log("quaff("+it.type+")")
 		it.react("quaff", [t])
 	}
 
 	t.attack = function(it) {
-		log("attack("+it.type+")")
+		//log("attack("+it.type+")")
 		it.react("attack", [t])
 	}
 
 	t.wear = function(it) {
-		log("wear("+it.type+")")
+		//log("wear("+it.type+")")
 		it.react("wear", [t])
 	}
 
 	t.wield = function(it) {
-		log("wield("+it.type+")")
+		//log("wield("+it.type+")")
 		it.react("wield", [t])
 	}
 
 	t.take = function(it) {
-		log("take("+it.type+")")
+		//log("take("+it.type+")")
 		it.react("take", [t])
 		t.showPack()
 	}
 
 	t.drop = function(it) {
-		log("drop("+it.type+")")
+		//log("drop("+it.type+")")
 		it.react("drop", [t])
 		t.showPack()
 	}
