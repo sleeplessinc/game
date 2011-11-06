@@ -1,37 +1,112 @@
 
 var log = console.log
+var util = require("util")
 
-
-function Player() {
-
-	var self = this
-
-	self.study = function(o) {
-		if(o.mayStudy)
-			return o.mayStudy(self)
-		return "You find nothing interesting about it."
-	}
-
-
-}
 
 function Thing() {
-
 	var self = this
+	self.type = arguments.callee.name.toLowerCase()
 
-	self.mayStudy = function(studier) {
-		if(studier instanceof Player)
-			return "A magic amulet"
-		return "A thing"
+	self.name = "thing"
+
+	self.react = function(action, actor) {
+		var a = action[0].toUpperCase() + action.substr(1)
+		var f = this["on"+a]
+		if(f)
+			return f.call(this, actor)
+		return null
 	}
 
+	self.onStudy = function(it) {
+		return this.name+" appears to be an ordinary "+this.type
+	}
 
 }
 
-p = new Player()
-t = tnew Thing()
 
-log(p.study(t))
+function Place(name, description) {
+	var self = this
+	self.type = arguments.callee.name.toLowerCase()
+	
+	self.name = name
+
+	self.things = []
+
+	self.insert = function(it) {
+		self.things.push(it)
+	}
+
+	self.onList = function(it) {
+		var t = self.things
+		var l = t.length
+		var s = ""
+		for(var i = 0; i < l; i++) {
+			s += t[i].name + "\n"
+		}
+		return s
+	}
+
+}
+Place.prototype = new Thing()
+
+
+function Player(name) {
+	var self = this
+	self.type = "adventurer"
+	
+	self.name = name
+
+	self.study = function(it) {
+		log("study("+it.type+"): "+it.react("study", self))
+	}
+	self.read = function(it) {
+		log("read("+it.type+"): "+it.react("read", self))
+	}
+
+}
+Player.prototype = new Thing()
+
+
+function Scroll(name) {
+	var self = this
+	self.type = arguments.callee.name.toLowerCase()
+
+	self.name = name
+
+	self.onRead = function(it) {
+		return "nothing happens"
+	}
+
+}
+Scroll.prototype = new Thing()
+
+
+function Monster(name) {
+	var self = this
+	self.type = arguments.callee.name.toLowerCase()
+
+	self.name = name
+
+	self.onRead = function(it) {
+		return "nothing happens"
+	}
+
+}
+Monster.prototype = new Thing()
+
+
+
+player = new Player("Joe")
+place = new Place("Home", "A cabin in a meadow")
+scroll = new Scroll("Aclirew")
+monster = new Monster("Glarnmaggle")
+
+place.insert(scroll)
+
+player.study(player)
+player.study(place)
+player.study(monster)
+player.read(scroll)
 
 
 /*

@@ -1,9 +1,12 @@
 
+Swords
+---------
+
 This is a game that I started to build many years ago.
 Before Node.js existed.
 
 The idea was an http 'server' written in javascript,
-with the logic on the server side.
+with the game logic on the server side.
 The server presented pages to the browser,
 processed the results of the user's chosen action,
 and then returned a new page with the results.
@@ -19,5 +22,10 @@ It was cool, but I never pursued it.
 
 I dug it out recently, and spent about 1 hour converting it to
 use Node.js instead of the Mozilla engine.
+
+This is the result of that conversion.
+
+I'm still hoping to flesh it out some more.
+
 
 
