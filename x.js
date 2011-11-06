@@ -2,14 +2,40 @@
 var log = console.log
 var util = require("util")
 
+log("-----------------");
 
-function Thing() {
-	var self = this
-	self.type = arguments.callee.name.toLowerCase()
 
-	self.name = "thing"
+function Bag() {
+	this.put = function(o) {
+		this.push(o)
+		return this.length
+	}
+	this.get = function(o) {
+		if(typeof o == "number") {
+			return (o >= 0 && o < s.length) ? this[o] : null
+		}
+		var i = this.find(o)
+		if(i >= 0) {
+			this.splice(i,1)
+			return o
+		}
+		return null
+	}
+	this.find = function(o) {
+		for(var i = 0; i < this.length; i++) {
+			if(this[i] === o)
+				return i
+		}
+		return -1
+	}
+}
+Bag.prototype = new Array()
 
-	self.react = function(action, actor) {
+
+function Thing(name) {
+	this.name = name || "thing"
+
+	this.react = function(action, actor) {
 		var a = action[0].toUpperCase() + action.substr(1)
 		var f = this["on"+a]
 		if(f)
@@ -17,78 +43,146 @@ function Thing() {
 		return null
 	}
 
-	self.onStudy = function(it) {
-		return this.name+" appears to be an ordinary "+this.type
+	this.onStudy = function(it) {
+		log(this.name+" appears to be an ordinary "+this.type)
+	}
+
+}
+
+function init(a) {
+	this.type = a.callee.name.toLowerCase()
+	a = Array.prototype.slice.call(a)
+	this.ctorArgs = a
+	Thing.apply(this, a)
+}
+
+
+function Place(name, desc) {
+	init.call(this, arguments)
+
+	this.desc = desc
+	this.things = new Bag()
+
+	this.onStudy = function(it) {
+		log("You are in a place called "+this.name)
+		log(this.desc)
+		log("You see "+this.things.length+" things:")
+		this.things.forEach(function(t, i) {
+			log("    "+(i+1)+": A "+t.type+" named "+t.name)
+		})
 	}
 
 }
 
 
-function Place(name, description) {
-	var self = this
-	self.type = arguments.callee.name.toLowerCase()
-	
-	self.name = name
+function Adventurer(name) {
+	init.call(this, arguments)
 
-	self.things = []
+	this.pack = new Bag()
+	this.armor = null
+	this.weapon = null
 
-	self.insert = function(it) {
-		self.things.push(it)
+	this.study = function(it) {
+		log("study("+it.type+")")
+		it.react("study", this)
 	}
 
-	self.onList = function(it) {
-		var t = self.things
-		var l = t.length
-		var s = ""
-		for(var i = 0; i < l; i++) {
-			s += t[i].name + "\n"
-		}
-		return s
+	this.read = function(it) {
+		log("read("+it.type+")")
+		it.react("read", this)
+	}
+
+	this.attack = function(it) {
+		log("attack("+it.type+")")
+		it.react("attack", this)
+	}
+
+	this.wear = function(it) {
+		log("wear("+it.type+")")
+		it.react("wear", this)
+	}
+
+	this.wield = function(it) {
+		log("wield("+it.type+")")
+		it.react("wield", this)
+	}
+
+	this.take = function(it) {
+		log("take("+it.type+")")
+		it.react("take", this)
+		this.showPack()
+	}
+
+	this.drop = function(it) {
+		log("drop("+it.type+")")
+		it.react("drop", this)
+		this.showPack()
+	}
+
+	this.showPack = function() {
+		log("Your pack contains "+this.pack.length+" thing(s):")
+		this.pack.forEach(function(o, i) {
+			log("    "+(i+1)+": A "+o.type+" named "+o.name)
+		})
 	}
 
 }
-Place.prototype = new Thing()
 
 
-function Player(name) {
-	var self = this
-	self.type = "adventurer"
-	
-	self.name = name
+function Treasure(name) {
+	init.call(this, arguments)
 
-	self.study = function(it) {
-		log("study("+it.type+"): "+it.react("study", self))
+	this.onTake = function(actor) {
+		actor.pack.put(this)
+		log(this.type+" taken")
 	}
-	self.read = function(it) {
-		log("read("+it.type+"): "+it.react("read", self))
+
+	this.onDrop = function(actor) {
+		actor.pack.get(this)
+		log(this.type+" dropped")
 	}
 
 }
-Player.prototype = new Thing()
 
 
 function Scroll(name) {
-	var self = this
-	self.type = arguments.callee.name.toLowerCase()
+	init.call(this, arguments)
 
-	self.name = name
-
-	self.onRead = function(it) {
-		return "nothing happens"
+	this.onRead = function(it) {
+		log("Nothing happens")
 	}
 
 }
-Scroll.prototype = new Thing()
+
+
+function Armor(name) {
+	init.call(this, arguments)
+
+	this.onWear = function(actor) {
+		actor.armor = this
+		log("Wearing "+this.type)
+	}
+
+}
+
+
+function Weapon(name) {
+	init.call(this, arguments)
+
+	this.onWield = function(actor) {
+		actor.weapon = this
+		log("Wielding "+this.type)
+	}
+
+}
+Weapon.prototype = new Treasure()
 
 
 function Monster(name) {
-	var self = this
-	self.type = arguments.callee.name.toLowerCase()
+	init.call(this, arguments)
 
-	self.name = name
-
-	self.onRead = function(it) {
-		return "nothing happens"
+	this.onAttack = function(it) {
+		log(this.name+" laughs at your feeble aggression")
 	}
 
 }
@@ -96,17 +190,28 @@ Monster.prototype = new Thing()
 
 
 
-player = new Player("Joe")
+adventurer = new Adventurer("Joe")
 place = new Place("Home", "A cabin in a meadow")
-scroll = new Scroll("Aclirew")
 monster = new Monster("Glarnmaggle")
+scroll = new Scroll("Aclirew")
+treasure = new Treasure("Gem")
+armor = new Armor("Leather armor")
+weapon = new Weapon("Rusty sword")
 
-place.insert(scroll)
+place.things.put(monster)
+place.things.put(treasure)
+place.things.put(scroll)
+place.things.put(armor)
+place.things.put(weapon)
 
-player.study(player)
-player.study(place)
-player.study(monster)
-player.read(scroll)
+adventurer.study(adventurer)
+adventurer.study(place)
+adventurer.study(monster)
+adventurer.read(scroll)
+adventurer.attack(monster)
+adventurer.take(treasure)
+adventurer.study(treasure)
+adventurer.drop(treasure)
 
 
 /*
@@ -115,7 +220,7 @@ World
 	Worlds contain Places.
 
 Place
-	Represents a physical location in space where the player currently "is".
+	Represents a physical location in space where the adventurer currently "is".
 	Places contain Things.
 	Exits are "associated" with Places.
 	Example, a town, a road, a room, etc.
@@ -123,7 +228,7 @@ Place
 Exit
 	Represents a link from one place to another.
 	There may be many associated with a Place leading to other Places.
-	The player uses Exits to move around the World
+	The adventurer uses Exits to move around the World
 	Example: Trapdoor, pathway, tunnel
 
 Thing
@@ -147,8 +252,8 @@ Person
 		* Move around the world using Exits
 		* Respond to questions
 
-Player
-	A Player is you.
+Adventurer
+	A Adventurer is you.
 	You can:
 		* Move around the world using Exits
 		* Attack 
@@ -174,7 +279,7 @@ Armor
 
 Potion
 	A Potion is a Thing that can be Quaffed.
-	Quaffing a potion will cause some sort of magical thing to happen to the player.
+	Quaffing a potion will cause some sort of magical thing to happen to the adventurer.
 	Example: A green potion, A stinky potion.
 
 Scroll
@@ -184,7 +289,7 @@ Scroll
 
 Word
 	Words are not Things because they can not be Taken or Dropped.
-	They are simply text representing something that the player can choose to say to a Person.
+	They are simply text representing something that the adventurer can choose to say to a Person.
 	Words are associated with Persons.
 	Example: "Do you know where I can find a cursed dagger?", "Hello."
 
