@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/sleeplessinc/game.png)](http://travis-ci.org/sleeplessinc/game)
 
 Swords
 ---------
