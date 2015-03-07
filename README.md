@@ -1,6 +1,5 @@
 
-Swords
----------
+## Swords
 
 This is a game that I started to build many years ago.
 Before Node.js existed.

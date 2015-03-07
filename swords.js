@@ -9,20 +9,20 @@ function Bag() {
 		var i = this.find(o)
 		if(i != -1) 
 			return false		// already present 
-		this.push(o)			// append to array
+		this.push(o)
 		return true
 	}
 	this.get = function(o) {
 		var i = this.find(o)
 		if(i < 0)
 			return null			// not present
-		this.splice(i,1)		// remove from array
+		this.splice(i,1)
 		return o
 	}
 	this.find = function(o) {
 		for(var i = 0; i < this.length; i++) {
 			if(this[i] === o)
-				return i		// found. return index
+				return i		// found
 		}
 		return -1				// not found
 	}
