@@ -1,5 +1,6 @@
 
 /*
+
 World
 	A collection of Places.
 	Worlds contain Places.
@@ -54,12 +55,12 @@ Player
 
 Weapon
 	A Weapon is a Thing that can be wielded.
-	Wielding a weapon cause "attacking" to inflict greater damage on Monsters.
+	Wielding a weapon causes "attacking" to inflict greater damage on Monsters.
 	Example: Sword, Rock, Wand
 
 Armor
 	An Armor is a Thing that can be worn.
-	Wearing an Armor causes attack from Monsters to take less damage on you.
+	Wearing an Armor causes attacks from Monsters to take less damage on you.
 	Example: Steel armor, Leather armor, Chain mail
 
 Potion
@@ -77,7 +78,6 @@ Word
 	They are simply text representing something that the player can choose to say to a Person.
 	Words are associated with Persons.
 	Example: "Do you know where I can find a cursed dagger?", "Hello."
-
 
 */
 

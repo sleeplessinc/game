@@ -147,7 +147,7 @@ function Bag()
 // Game specific code
 // Must define a "World" constructor with an "input" function
 world = null;
-eval(e_file_contents("swords.js"));
+eval(e_file_contents("was-swords.js"));
 
 
 

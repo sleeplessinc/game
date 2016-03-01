@@ -337,6 +337,9 @@ var prefix = '\nSwords > '
 rl.setPrompt(prefix, prefix.length);
 
 function input(line) {
+	log("input: \""+(typeof line)+"\" \""+line+"\"");
+	if(typeof line !== "string")
+		return;
 	line = line.trim()
 	if(!line)
 		return

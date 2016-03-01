@@ -83,7 +83,7 @@ eval(e_file_contents("boot.js"))
 
 
 var server = http.createServer(accept).listen(8800)
-log("listening")
+log("listening on 8800")
 
 
 
