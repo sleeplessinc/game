@@ -9,6 +9,8 @@ wrt = function(s) {
 }
 
 game = {};
+game.player = {};
+game.player.has_visited = {};
 game.inventory = [];
 game.world = {};
 game.world.places = [];
@@ -45,7 +47,7 @@ game.world.places.push({
 });
 
 
-here = game.world.places[0];
+//here = game.world.places[0];
 
 
 look = function(args) {
@@ -57,6 +59,16 @@ look = function(args) {
 		a.push(k);
 	};
 	wrt("\nYou can go "+a.join(", ")+".\n");
+}
+
+
+enter_place = function(place) {
+	here = place;
+	here.enter([]);
+	if(!game.player.has_visited[here.name]) {
+		look([]);
+		game.player.has_visited[here.name] = true;
+	}
 }
 
 go = function(args) {
@@ -73,8 +85,7 @@ go = function(args) {
 	for(var i = 0; i < game.world.places.length; i++) {
 		var place = game.world.places[i];
 		if(place.name.ucase() == there.ucase()) {
-			here = place;
-			here.enter([]);
+			enter_place(place);
 			return;
 		}
 	};
@@ -102,8 +113,9 @@ parse = function(line) {
 }
 
 
-here.enter([]);
-look([]);
+enter_place(game.world.places[0]);
+//here.enter([]);
+//look([]);
 
 
 prompt = function() {
