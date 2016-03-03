@@ -3,11 +3,29 @@
 require("sleepless");
 require("g")("log5");
 
+var DS = require("ds").DS
+ds = new DS()
+
+if(!ds.game) {
+	ds.game = {};
+	ds.game.pack = {};
+	ds.game.has_visited = {};
+	ds.game.world = {};
+	ds.game.world.places = [];
+	ds.game.world.places[0] = {
+		name: "Nowhere",
+		desc: "You see nothing.\n",
+		exits: {},
+	}
+	//ds.save();
+}
 
 wrt = function(s) {
 	process.stdout.write(s);
 }
 
+game = ds.game;
+/*
 game = {};
 game.player = {};
 game.player.has_visited = {};
@@ -45,89 +63,192 @@ game.world.places.push({
 	},
 	exits: {north: "home"},
 });
+*/
 
 
-//here = game.world.places[0];
+here = null;
 
 
-look = function(args) {
+look = function(args, cb) {
 
-	here.look();
+	wrt("____ "+here.name+" ____\n");
+
+	wrt(here.desc);
 
 	var a = []
 	for(var k in here.exits) {
 		a.push(k);
 	};
-	wrt("\nYou can go "+a.join(", ")+".\n");
+	if(a.length > 0) {
+		wrt("\nYou can go "+a.join(", ")+".\n");
+	}
+
+	if(cb) {
+		cb();
+	}
 }
 
 
-enter_place = function(place) {
+go_place = function(place) {
 	here = place;
-	here.enter([]);
-	if(!game.player.has_visited[here.name]) {
+	if(!game.has_visited[here.id]) {
 		look([]);
-		game.player.has_visited[here.name] = true;
+		game.has_visited[here.id] = true;
 	}
 }
 
-go = function(args) {
-	var where = args[1];	
-	if(!where) {
-		wrt("Go where?\n");
-		return;
-	}
-	var there = here.exits[where];
-	if(!there) {
-		wrt("Can't go there.\n");
-		return;
-	}
-	for(var i = 0; i < game.world.places.length; i++) {
+
+get_place = function(name) {
+	var len = game.world.places.length;
+	for(var i = 0; i < len; i++) {
 		var place = game.world.places[i];
-		if(place.name.ucase() == there.ucase()) {
-			enter_place(place);
-			return;
+		if(place.name.ucase() == name.ucase()) {
+			return place;
 		}
-	};
-	wrt("bad link: "+there+"\n");
+	}
+	return null;
+}
+
+go = function(args, cb) {
+	var where = args[1] || "";
+	if(where) {
+		var name = here.exits[where];
+		if(name) {
+			var place = get_place(name);
+			if(place) {
+				go_place(place);
+				cb();
+				return;
+			}
+			else {
+				wrt("broken link");
+			}
+		}
+		else {
+			wrt("Can't go \""+where+"\"\n");
+		}
+	}
+	else {
+		wrt("Usage: go EXIT\n");
+	}
+	cb();
 }
 
 
-parse = function(line) {
-	line = line.trim();
+make_place = function(args, cb) {
+	get_line("Name: ", function(name) {
+		get_line("Description: ", function(desc) {
+			it = { id: name.toId(), name: name, desc: desc+"\n", exits: {} };
+			game.world.places.push(it);
+			log("Created place with id="+it.id);
+			cb();
+		});
+	});
+}
 
+make_exit = function(args, cb) {
+	var dir = args[2];
+	if(dir) {
+		if(it) {
+			here.exits[dir] = it.name;
+			log("I made an exit called \""+dir+"\" that leads to \""+it.name+"\"\n");
+		}
+		else {
+			wrt("no it");
+		}
+	}
+	else {
+		wrt("Usage: make exit DIRECTION\n");
+	}
+	cb();
+}
+
+
+make = function(args, cb) {
+	var what = args[1];
+	var fun = global["make_"+what];
+	if(what && typeof fun === "function") {
+		fun(args, cb);
+	}
+	else {
+		wrt("Usage: make place\n");
+		cb();
+	}
+}
+
+
+
+find = function(args, cb) {
+	var what = args[1];
+
+	var fun = global["find_"+what];
+	if(what && typeof fun === "function") {
+		fun(args, cb);
+	}
+	else {
+		wrt("Usage: find WHAT\n");
+		cb();
+	}
+}
+
+
+
+normal_prompt = "\n> ";
+
+main_parse = function(line) {
 	var args = line.split(/\s/);
 	//I("args="+o2j(args));
 	var cmd = args[0];
-	if(!cmd) {
-		return;
+	if(cmd) {
+		var fun = global[cmd];
+		if(typeof fun === "function") {
+			fun(args, function() {
+				get_line(normal_prompt, main_parse);
+			});
+			return;
+		}
+		else {
+			wrt("What?\n");
+		}
 	}
-
-	var fun = global[cmd];
-	if(typeof fun === "function") {
-		fun(args);
-	}
-	else {
-		wrt("What?\n");
-	}
+	get_line(normal_prompt, main_parse);
 }
 
 
-enter_place(game.world.places[0]);
-//here.enter([]);
-//look([]);
+//	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	
 
-
-prompt = function() {
-	process.stdout.write("\nSwords > ");
-}
-
-prompt();
 require("chopper");
-stream = process.stdin
-var chopper = new StreamChopper(stream, "\n", function(line) {
-    chopper.pause();
-	parse(line);
-	prompt();
-	chopper.resume();
+var chopper = new StreamChopper(process.stdin, "\n", function(line) {
+	line = line.trim();
+	var p = current_parser;
+	if(p) {
+		current_parser = null;
+		p(line);
+	}
 });
+
+
+current_parser = null;
+
+get_line = function(prompt, receiver) {
+	if(prompt) {
+		process.stdout.write(prompt);
+	}
+	current_parser = function(line) {
+		// incoming line
+		chopper.pause();	// stop input
+		receiver(line);		// pass the line on
+	}
+	chopper.resume();		// allow  input
+}
+
+
+wrt("+-------------------------+\n");
+wrt("|    Welcome to Swords    |\n");
+wrt("+-------------------------+\n");
+wrt("\n");
+go_place(game.world.places[0]);
+
+get_line(normal_prompt, main_parse);
+
+
