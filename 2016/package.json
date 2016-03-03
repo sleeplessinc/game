@@ -3,6 +3,7 @@
     "g": "^2.0.0",
     "log5": "^2.0.0",
     "maws": "^1.8.0",
-    "sleepless": "^2.3.2"
+    "sleepless": "^2.3.2",
+    "sleepless-replicate": "^2.2.0"
   }
 }
