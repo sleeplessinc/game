@@ -1,10 +1,8 @@
 
-log = function(s) {
-	console.log(s)
-} 
-
 
 game = {
+	title: "Untitled Game",
+	last_saved: 0,
 	pack: {},
 	has_visited: {},
 	world: {
@@ -22,25 +20,53 @@ here = game.world.places[0];
 e_loc = I("location");
 e_desc = I("description");
 
+e_edit_place = I("edit_place");
+
+
+show_elem = function(elem) { elem.style.display = "block"; }
+hide_elem = function(elem) { elem.style.display = "none"; }
+
+
+hide_pages = function() {
+	hide_elem(edit_place);
+}
+
+
 redraw = function() {
 
-	e_loc.innerHTML = here.name;
+	title.innerHTML = game.title;
 
-	e_desc.innerHTML = here.desc;
+	var s = "(Unsaved)";
+	var ts = game.last_saved;
+	if(ts != 0) {
+		s = agoStr(ts) + " ("+ts2us_mdyhm(game.last_saved)+")";
+	}
+	last_saved.innerHTML = s;
 
 	var a = [];
-	for(var k in here.exits) {
-		a.push(here[k]);
+	for(var k in game.world.places) {
+		a.push(game.world.places[k]);
 	}
-	replicate("tpl_exit", a);
+	replicate("tpl_place", a, function(e, d, i) {
+		e.onclick = function() {
+			I("place_name").value = d.name;
+			I("place_desc").value = d.desc;
+			hide_pages();
+			show_elem(edit_place);
+		}
+	});
 
 }
 
 save = function() {
-	conn.send({msg:"save", game:game, name:"game.json"}, function(r) {
-		log("save: r="+o2j(r));
-		game = r.game;
-		here = game.world.places[0];
+	conn.send({msg:"save", game:game, name:"game"}, function(r) {
+		if(r.error) {
+			alert(o2j(r.error));
+		}
+		else {
+			game = r.game;
+			here = game.world.places[0];
+		}
 		redraw();
 	});
 }

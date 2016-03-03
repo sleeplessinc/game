@@ -2,21 +2,43 @@
 <html>
 <head>
 	<link id="favicon_link" type="image/x-icon" rel="shortcut icon" href="">
+	<style>
+		.handy {
+			cursor: pointer;
+			font-weight: bold;
+			color: blue;
+		}
+		.page {
+			display: none;
+			background-color: #eee;
+			padding: 10px;
+		}
+	</style>
 </head>
 <body>
 
 
+<hr>
 <div id=menu>
-	<input type=button value="Save" onclick="save()">
+	<input type=button value="Save" onclick="save()" class=handy>
 </div>
+<hr>
 
-<h1 id=location></h1>
-<div id=description></div>
-<div id=exits>
-	<h3>Exits</h3>
-	<div id=tpl_exit>
-		__name__
-	</div>
+<b>Title: </b><span id=title></span><br>
+<b>Last saved: </b><span id=last_saved></span><br>
+<p>
+
+<b>Places: </b><br>
+<div id=tpl_place class=handy><b>__name__</b></div>
+
+
+<div id=edit_place class=page>
+	<h2>Edit Place</h2>
+	Name: <input id=place_name value="">
+	<p>
+	Description:<br>
+	<textarea id=place_desc></textarea>
+	<p>
 </div>
 
 
