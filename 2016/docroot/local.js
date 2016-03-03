@@ -16,10 +16,6 @@ game = {
 	},
 };
 
-load = function() {
-}
-
-
 
 here = game.world.places[0];
 
@@ -40,6 +36,11 @@ redraw = function() {
 
 }
 
+load = function() {
+	redraw();
+}
+
+//	-	-	-	-	-	-	-	-
 
 cb_msg = function(m) {
 	if(m.msg == "ping") {
@@ -62,7 +63,6 @@ cb_ctrl = function(m, x) {
 	if(m === "connected") {
 		conn.send({msg:"hello"}, function(r) {
 			log("I've been welcomed as "+r.name)
-
 			load();
 		});
 		return
