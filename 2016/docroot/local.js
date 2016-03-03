@@ -36,9 +36,18 @@ redraw = function() {
 
 }
 
-load = function() {
-	redraw();
+save = function() {
+	conn.send({msg:"save", game:game, name:"game.json"}, function(r) {
+		log("save: r="+o2j(r));
+		game = r.game;
+		here = game.world.places[0];
+		redraw();
+	});
 }
+
+
+redraw();
+
 
 //	-	-	-	-	-	-	-	-
 
@@ -63,7 +72,6 @@ cb_ctrl = function(m, x) {
 	if(m === "connected") {
 		conn.send({msg:"hello"}, function(r) {
 			log("I've been welcomed as "+r.name)
-			load();
 		});
 		return
 	}

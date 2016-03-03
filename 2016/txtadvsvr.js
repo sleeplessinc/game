@@ -18,6 +18,15 @@ connect = function(req, cb_accept) {
 				log(o2j(r));
 			})
 		}
+		else
+		if(m.msg == "save") {
+			m.game.world.places[0].name = "Somewhere!";
+			m.reply({game:m.game})
+		}
+		else {
+			m.error("what?");
+		}
+
 	}
 
 	var cb_ctrl = function(s, xtra) {
