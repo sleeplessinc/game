@@ -20,7 +20,6 @@ here = game.world.places[0];
 e_loc = I("location");
 e_desc = I("description");
 
-e_edit_place = I("edit_place");
 
 
 show_elem = function(elem) { elem.style.display = "block"; }
@@ -28,9 +27,18 @@ hide_elem = function(elem) { elem.style.display = "none"; }
 
 
 hide_pages = function() {
-	hide_elem(edit_place);
+	hide_elem(place);
 }
 
+show_place = function(place) {
+	I("place_name").value = place.name;
+	I("place_desc").value = place.desc;
+	replicate("tpl_exit", place.exits, function(e, d, i) {
+		// ...
+	});
+	hide_pages();
+	show_elem(place);
+}
 
 redraw = function() {
 
@@ -49,10 +57,7 @@ redraw = function() {
 	}
 	replicate("tpl_place", a, function(e, d, i) {
 		e.onclick = function() {
-			I("place_name").value = d.name;
-			I("place_desc").value = d.desc;
-			hide_pages();
-			show_elem(edit_place);
+			show_place(d);
 		}
 	});
 
