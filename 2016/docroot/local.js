@@ -1,33 +1,55 @@
 
+show_elem = function(elem) { elem.style.display = "block"; }
+hide_elem = function(elem) { elem.style.display = "none"; }
+
+e_loc = I("location");
+e_desc = I("description");
+e_show_place = I("show_place");
+
+//	-	-	-	-	-	-	-	-	-	-
 
 game = {
 	title: "Untitled Game",
 	last_saved: 0,
-	pack: {},
+	pack: [],
 	has_visited: {},
 	world: {
-		places: [{
-			name: "Nowhere",
-			desc: "You see nothing.",
-			exits: {},
-		}],
+		places: [],
 	},
 };
+game.world.places.push({
+	id: "nowhere",
+	name: "Nowhere",
+	desc: "You see nothing.",
+	exits: [],
+});
 
+//	-	-	-	-	-	-	-	-	-	-
 
-here = game.world.places[0];
+get_obj = function(id, arr) {
+	for(var i = 0; i < arr.length; i++) {
+		var obj = arr[i];
+		if(obj.id === id || obj.name.toLowerCase() === id.toLowerCase()) {
+			return obj;
+		}
+	};
+	return null;
+}
 
-e_loc = I("location");
-e_desc = I("description");
+get_place = function(id) {
+	return get_obj(id, game.world.places);
+}
 
+get_exit = function(id) {
+	return get_obj(id, here.exits);
+}
 
+//	-	-	-	-	-	-	-	-	-	-
 
-show_elem = function(elem) { elem.style.display = "block"; }
-hide_elem = function(elem) { elem.style.display = "none"; }
-
+here = get_place("nowhere");
 
 hide_pages = function() {
-	hide_elem(place);
+	hide_elem(e_show_place);
 }
 
 show_place = function(place) {
@@ -37,7 +59,7 @@ show_place = function(place) {
 		// ...
 	});
 	hide_pages();
-	show_elem(place);
+	show_elem(e_show_place);
 }
 
 redraw = function() {
@@ -51,11 +73,7 @@ redraw = function() {
 	}
 	last_saved.innerHTML = s;
 
-	var a = [];
-	for(var k in game.world.places) {
-		a.push(game.world.places[k]);
-	}
-	replicate("tpl_place", a, function(e, d, i) {
+	replicate("tpl_place", game.world.places, function(e, d, i) {
 		e.onclick = function() {
 			show_place(d);
 		}
@@ -70,7 +88,7 @@ save = function() {
 		}
 		else {
 			game = r.game;
-			here = game.world.places[0];
+			here = get_place("nowhere");
 		}
 		redraw();
 	});
