@@ -17,16 +17,19 @@
 			vertical-align: top;
 			padding-right: 20px;
 		}
+		.menu {
+			background-color: #fef;
+			border: solid 1px #dcd;
+			text-align: center;
+		}
 	</style>
 </head>
 <body>
 
 
-<hr>
-<div id=menu>
-	<input type=button value="Save" onclick="save()" class=handy>
+<div class=menu>
+	<input type=button value="Save World" onclick="save_world()" class=handy>
 </div>
-<hr>
 
 
 <table><tr><td>
@@ -40,6 +43,10 @@
 </td><td>
 
 	<div id=show_place class=page>
+		<div class=menu>
+			<input type=button value="Save Place" onclick="save_place()">
+		</div>
+		<br>
 		<b>Place</b> <input id=place_name value=""><br>
 		<br>
 		<b>Description:</b><br>

@@ -2,8 +2,8 @@
 show_elem = function(elem) { elem.style.display = "block"; }
 hide_elem = function(elem) { elem.style.display = "none"; }
 
-e_loc = I("location");
-e_desc = I("description");
+e_place_name = I("place_name");
+e_place_desc = I("place_desc");
 e_show_place = I("show_place");
 
 //	-	-	-	-	-	-	-	-	-	-
@@ -46,13 +46,13 @@ get_exit = function(id) {
 
 //	-	-	-	-	-	-	-	-	-	-
 
-here = get_place("nowhere");
+place = get_place("nowhere");
 
 hide_pages = function() {
 	hide_elem(e_show_place);
 }
 
-show_place = function(place) {
+show_place = function() {
 	I("place_name").value = place.name;
 	I("place_desc").value = place.desc;
 	replicate("tpl_exit", place.exits, function(e, d, i) {
@@ -75,23 +75,32 @@ redraw = function() {
 
 	replicate("tpl_place", game.world.places, function(e, d, i) {
 		e.onclick = function() {
-			show_place(d);
+			place = d;
+			show_place();
 		}
 	});
 
 }
 
-save = function() {
+save_world = function() {
+	var where = here.id;
 	conn.send({msg:"save", game:game, name:"game"}, function(r) {
 		if(r.error) {
 			alert(o2j(r.error));
 		}
 		else {
 			game = r.game;
-			here = get_place("nowhere");
+			here = get_place(where ? where : "nowhere");
 		}
 		redraw();
 	});
+}
+
+save_place = function() {
+	place.name = e_place_name.value;
+	place.desc = e_place_desc.value;
+	place.id = place.name.toId();
+	redraw();
 }
 
 
