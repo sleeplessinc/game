@@ -8,101 +8,16 @@ e_show_place = I("show_place");
 
 //	-	-	-	-	-	-	-	-	-	-
 
-get_obj = function(id, arr) {
-	for(var i = 0; i < arr.length; i++) {
-		var obj = arr[i];
-		if(obj.id === id || obj.name.toLowerCase() === id.toLowerCase()) {
-			return obj;
-		}
-	};
-	return null;
+
+msg_ping = function(m) {
+	m.reply({msg:"pong"});
 }
 
-get_place = function(id) {
-	return get_obj(id, game.world.places);
-}
-
-get_exit = function(id) {
-	return get_obj(id, here.exits);
-}
 
 //	-	-	-	-	-	-	-	-	-	-
 
-place = get_place("nowhere");
+game = null;
 
-hide_pages = function() {
-	hide_elem(e_show_place);
-}
-
-show_place = function() {
-	I("place_name").value = place.name;
-	I("place_desc").value = place.desc;
-	replicate("tpl_exit", place.exits, function(e, d, i) {
-		// ...
-	});
-	hide_pages();
-	show_elem(e_show_place);
-}
-
-exit_seq = 0;
-new_exit = function() {
-	exit_seq += 1;
-	var name = "Exit "+exit_seq;
-	place.exits.push({
-		id: name.toId(),
-		name: name,
-		dest: "",
-	});
-	show_place();
-}
-
-
-redraw = function() {
-
-	title.innerHTML = game.title;
-
-	var s = "(Unsaved)";
-	var ts = game.last_saved;
-	if(ts != 0) {
-		s = agoStr(ts) + " ("+ts2us_mdyhm(game.last_saved)+")";
-	}
-	last_saved.innerHTML = s;
-
-	replicate("tpl_place", game.world.places, function(e, d, i) {
-		e.onclick = function() {
-			place = d;
-			show_place();
-		}
-	});
-
-}
-
-save_world = function() {
-	var where = here.id;
-	conn.send({msg:"save", game:game, name:"game"}, function(r) {
-		if(r.error) {
-			alert(o2j(r.error));
-		}
-		else {
-			game = r.game;
-			here = get_place(where ? where : "nowhere");
-		}
-		redraw();
-	});
-}
-
-save_place = function() {
-	place.name = e_place_name.value;
-	place.desc = e_place_desc.value;
-	place.id = place.name.toId();
-	redraw();
-}
-
-
-redraw();
-
-
-//	-	-	-	-	-	-	-	-
 
 cb_msg = function(m) {
 	var fun = global["msg_"+m.msg];
@@ -110,7 +25,7 @@ cb_msg = function(m) {
 		fun(m);
 	}
 	else {
-		W("bad msg: "+o2j(m));
+		log("bad msg: "+o2j(m));
 	}
 }
 
@@ -128,6 +43,9 @@ cb_ctrl = function(m, x) {
 	if(m === "connected") {
 		conn.send({msg:"hello"}, function(r) {
 			log("I've been welcomed as "+r.name)
+			conn.send({msg:"load"}, function(r) {
+				game = r;
+			});
 		});
 		return
 	}
