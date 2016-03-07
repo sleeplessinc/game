@@ -35,6 +35,20 @@ redraw = function() {
 }
 
 
+delete_exit = function(id) {
+	exit = exit_with_id(id);
+	if(confirm("Are you sure you want to delete this exit named \""+exit.name+"\"?")) {
+		conn.send({msg:"delete_exit", id:exit.id}, function(r) {
+			game = r.game;
+			place = place_with_id(place.id);
+			redraw();
+			show_place();
+			hide_dialogs();
+			hide_elem(e_glass);
+		});
+	}
+}
+
 edit_exit = function(id) {
 
 	exit = exit_with_id(id);
@@ -45,6 +59,7 @@ edit_exit = function(id) {
 	replicate("tpl_exit_dest", game.world.places, function(e, d, i) {
 		// ...
 	});
+	e_exit_dest.value = exit.dest_id;
 
 	cancel = hide_dialogs;
 	okay = function() {
@@ -67,11 +82,10 @@ edit_exit = function(id) {
 new_exit = function() {
 	conn.send({msg:"new_exit", place_id:place.id}, function(r) {
 		game = r.game;
-		place = place_with_id(r.place_id);
-		exit = exit_with_id(r.exit_id);
+		place = place_with_id(place.id);
 		redraw();
 		show_place();
-		edit_exit();
+		edit_exit(r.exit_id);
 	})
 }
 

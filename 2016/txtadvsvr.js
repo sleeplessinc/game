@@ -71,6 +71,23 @@ msg_delete_place = function(m, name) {
 	}
 }
 
+msg_delete_exit = function(m, name) {
+	var id = m.id;
+	var places = game.world.places;
+	var l = places.length;
+	for(var i = 0; i < l; i++) {
+		var place = places[i];
+		for(var j = 0; j < place.exits.length; j++) {
+			if(place.exits[j].id == id) {
+				place.exits.splice(j, 1);
+				ds.save();
+				m.reply({game:ds.game});
+			}
+		}
+	}
+	m.error(o2j(m));
+}
+
 msg_change_exit_details = function(m, name) {
 	var exit = exit_with_id(m.id);
 	if(exit) {
