@@ -26,6 +26,7 @@ game = null;
 redraw = function() {
 	log("redrawing");
 	title.innerHTML = game.title;
+	game.world.places.sort(function(a, b) { if(a.name < b.name) { return -1; } if(a.name > b.name) { return 1; } return 0; });
 	replicate("tpl_places", game.world.places, function(e, d, i) {
 		e.onclick = function() {
 			place = d;
