@@ -6,7 +6,41 @@ maws = require("maws");
 require("sleepless");
 require("g")("log5");
 
-seq = 0
+
+seq = 0;
+
+DS = require("ds").DS;
+ds = new DS("world.json");
+if(!ds.world) {
+	ds.game = {
+		title: "Untitled Game",
+		last_saved: 0,
+		pack: [],
+		has_visited: {},
+		world: {
+			title: "A World",
+			places: [ {
+				id: "nowhere",
+				name: "Nowhere",
+				desc: "You see nothing.",
+				exits: [],
+			} ],
+		},
+	};
+	ds.save();
+}
+
+
+msg_load = function(m, name) {
+	m.reply( ds.game );
+}
+
+msg_hello = function(m, name) {
+	m.reply({msg:"welcome", name:name})
+	conn.send({msg:"ping"}, function(r) {
+		log(o2j(r));
+	})
+}
 
 connect = function(req, cb_accept) {
 
@@ -16,32 +50,13 @@ connect = function(req, cb_accept) {
 	var cb_msg = function(m) {
 		log(name+": "+o2j(m));
 
-		if(m.msg == "hello") {
-			m.reply({msg:"welcome", name:name})
-			conn.send({msg:"ping"}, function(r) {
-				log(o2j(r));
-			})
-		}
-		else
-		if(m.msg == "save") {
-			var path = m.name+".json";
-			var game = m.game;
-			fs.writeFile(path, o2j(game), "utf8", function(err) {
-				if(err) {
-					W(o2j(err));
-					m.error("Unable to save");
-				}
-				else {
-					log("saved to \""+path+"\"");
-					game.last_saved = time();
-					m.reply({game:game})
-				}
-			});
+		var fun = global["msg_"+m.msg];
+		if(typeof fun === "function") {
+			fun(m, name);
 		}
 		else {
-			m.error("what?");
+			W("bad msg");
 		}
-
 	}
 
 	var cb_ctrl = function(s, xtra) {

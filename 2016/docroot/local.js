@@ -8,24 +8,6 @@ e_show_place = I("show_place");
 
 //	-	-	-	-	-	-	-	-	-	-
 
-game = {
-	title: "Untitled Game",
-	last_saved: 0,
-	pack: [],
-	has_visited: {},
-	world: {
-		places: [],
-	},
-};
-game.world.places.push({
-	id: "nowhere",
-	name: "Nowhere",
-	desc: "You see nothing.",
-	exits: [],
-});
-
-//	-	-	-	-	-	-	-	-	-	-
-
 get_obj = function(id, arr) {
 	for(var i = 0; i < arr.length; i++) {
 		var obj = arr[i];
@@ -123,9 +105,12 @@ redraw();
 //	-	-	-	-	-	-	-	-
 
 cb_msg = function(m) {
-	if(m.msg == "ping") {
-		m.reply({msg:"pong"});
-		return
+	var fun = global["msg_"+m.msg];
+	if(typeof fun === "function") {
+		fun(m);
+	}
+	else {
+		W("bad msg: "+o2j(m));
 	}
 }
 
