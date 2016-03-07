@@ -4,6 +4,9 @@ hide_elem = function(elem) { elem.style.display = "none"; }
 
 e_glass = I("glass");
 e_dialog_edit_place = I("dialog_edit_place");
+e_dialog_edit_exit = I("dialog_edit_exit");
+e_exit_name = I("exit_name");
+e_exit_dest = I("exit_dest");
 e_place_name = I("place_name");
 e_place_desc = I("place_desc");
 e_show_place = I("show_place");
@@ -13,6 +16,7 @@ hide_pages = function() {
 }
 
 hide_dialogs = function() {
+	hide_elem(e_dialog_edit_exit);
 	hide_elem(e_dialog_edit_place);
 	hide_elem(e_glass);
 }
@@ -28,6 +32,47 @@ redraw = function() {
 			show_place();
 		}
 	});
+}
+
+
+edit_exit = function(id) {
+
+	exit = exit_with_id(id);
+
+	e_exit_name.value = exit.name;
+	e_exit_dest.value = exit.dest_id;
+
+	replicate("tpl_exit_dest", game.world.places, function(e, d, i) {
+		// ...
+	});
+
+	cancel = hide_dialogs;
+	okay = function() {
+		hide_elem(e_dialog_edit_exit);
+		conn.send({msg:"change_exit_details", id:exit.id, name:e_exit_name.value, dest_id:e_exit_dest.value}, function(r) {
+			game = r.game;
+			place = place_with_id(place.id);
+			redraw();
+			show_place();
+			hide_dialogs();
+			hide_elem(e_glass);
+		});
+	}
+
+	show_elem(e_glass);
+	show_elem(e_dialog_edit_exit);
+	e_exit_name.select();
+}
+
+new_exit = function() {
+	conn.send({msg:"new_exit", place_id:place.id}, function(r) {
+		game = r.game;
+		place = place_with_id(r.place_id);
+		exit = exit_with_id(r.exit_id);
+		redraw();
+		show_place();
+		edit_exit();
+	})
 }
 
 
@@ -76,10 +121,24 @@ new_place = function() {
 }
 
 
-show_place = function() {
+show_place = function(id) {
+
+	if(id) {
+		place = place_with_id(id);
+		if(!place) {
+			return;
+		}
+	}
+
 	replicate("tpl_place", [place]);
+	place.exits.forEach(function(exit) {
+		var p = place_with_id(exit.dest_id);
+		exit.dest_name = p ? p.name : "";
+	});
 	replicate("tpl_exit", place.exits, function(e, d, i) {
-		// ...
+		e.onclick = function() {
+			console.log("foo");
+		}
 	});
 	hide_pages();
 	show_elem(e_show_place);

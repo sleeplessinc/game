@@ -38,11 +38,44 @@ if(!ds.game) {
 game = ds.game;
 
 
+msg_new_exit = function(m, name) {
+	var place_id = m.place_id;
+	var place = place_with_id(place_id);
+	if(place) {
+		var exit_id = (ds.game.world.seq += 1);
+		var exit = {
+			id: exit_id,
+			name: "nowhere",
+			dest_id: -1,
+		};
+		place.exits.push(exit);
+		ds.save();
+		m.reply({game:ds.game, place_id:place_id, exit_id:exit_id});
+	}
+	else {
+		m.error(o2j(m));
+	}
+}
+
+
 msg_delete_place = function(m, name) {
 	var id = m.id;
 	var i = index_of_place_with_id(id);
 	if(i != -1) {
 		ds.game.world.places.splice(i, 1);
+		ds.save();
+		m.reply({game:ds.game});
+	}
+	else {
+		m.error(o2j(m));
+	}
+}
+
+msg_change_exit_details = function(m, name) {
+	var exit = exit_with_id(m.id);
+	if(exit) {
+		exit.name = m.name;
+		exit.dest_id = m.dest_id;
 		ds.save();
 		m.reply({game:ds.game});
 	}

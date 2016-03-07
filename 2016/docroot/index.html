@@ -56,6 +56,18 @@
 		.nowrap {
 			white-space: nowrap;
 		}
+		.exit_name {
+			padding-left: 20px;
+			min-width: 100px;
+			white-space: nowrap;
+			display: inline-block;
+			cursor: pointer;
+		}
+		.exit_dest_name {
+			min-width: 100px;
+			white-space: nowrap;
+			display: inline-block;
+		}
 	</style>
 </head>
 <body>
@@ -83,13 +95,31 @@
 		</div>
 		<br>
 		<b>Exits: </b> <div class=edit onclick="new_exit()">NEW</div> <br>
-		<div id=tpl_exit class=handy> &nbsp; __name__ </div>
+		<div id=tpl_exit>
+			<div class=exit_name>__name__</div>
+			<div class="exit_dest_name handy" onclick="show_place(__dest_id__)">&rarr; __dest_name__</div>
+			<div class=edit onclick="edit_exit(__id__)">EDIT</div>
+			<div class=edit onclick="delete_exit(__id__)">DELETE</div>
+		</div>
 	</div>
 
 </td></tr></table>
 
 
 <div id=glass></div>
+
+<div class=dialog id=dialog_edit_exit>
+	<b>Name:</b> <input type=text id=exit_name>
+	<br><br>
+	<b>Destination:</b><br>
+	<select id=exit_dest cols=70 rows=10>
+		<option value=-1>Nowhere</option>
+		<option id=tpl_exit_dest value=__id__>__name__</option>
+	</select>
+	<br><br>
+	<input type=button value="Cancel" onclick="cancel()">
+	<input type=button value="Okay" onclick="okay()">
+</div>
 
 <div class=dialog id=dialog_edit_place>
 	<b>Name:</b> <input type=text id=place_name>
