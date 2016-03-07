@@ -62,6 +62,19 @@ show_place = function() {
 	show_elem(e_show_place);
 }
 
+exit_seq = 0;
+new_exit = function() {
+	exit_seq += 1;
+	var name = "Exit "+exit_seq;
+	place.exits.push({
+		id: name.toId(),
+		name: name,
+		dest: "",
+	});
+	show_place();
+}
+
+
 redraw = function() {
 
 	title.innerHTML = game.title;
