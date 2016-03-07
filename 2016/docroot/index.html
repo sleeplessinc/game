@@ -28,6 +28,30 @@
 			color: #f0f;
 			display: inline-block;
 		}
+		#glass {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: #000;
+			opacity: 0.2;
+			z-index: 1;
+		}
+		div.dialog {
+			display: none;
+			position: fixed;
+			top: 15%;
+			left: 25%;
+			width: 50%;
+			height: 50%;
+			background-color: #fff;
+			border: solid 1px #ddd;
+			padding: 20px;
+			text-align: center;
+			z-index: 2;
+		}
 	</style>
 </head>
 <body>
@@ -56,12 +80,24 @@
 
 </td></tr></table>
 
+
+<div id=glass></div>
+
+<div class=dialog id=dialog_place_desc>
+	<h2>Place Description</h2>
+	<textarea id=place_desc cols=70 rows=10></textarea> <br>
+	<br>
+	<input type=button value="Cancel" onclick="cancel()">
+	<input type=button value="Okay" onclick="okay()">
+</div>
+
 <pre id=dbg_output></pre>
 
 <script src="./sleepless.js"></script>
 <script src="./maws.js"></script>
 <script src="./replicate.js"></script>
 
+<script src="common.js"></script>
 <script src=local.js></script>
 
 

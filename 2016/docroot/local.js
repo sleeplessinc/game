@@ -2,6 +2,8 @@
 show_elem = function(elem) { elem.style.display = "block"; }
 hide_elem = function(elem) { elem.style.display = "none"; }
 
+e_glass = I("glass");
+e_dialog_place_desc = I("dialog_place_desc");
 e_place_name = I("place_name");
 e_place_desc = I("place_desc");
 e_show_place = I("show_place");
@@ -10,6 +12,10 @@ hide_pages = function() {
 	hide_elem(e_show_place);
 }
 
+hide_dialogs = function() {
+	hide_elem(e_dialog_place_desc);
+	hide_elem(e_glass);
+}
 
 game = null;
 
@@ -25,6 +31,37 @@ redraw = function() {
 }
 
 
+edit_place_desc = function() {
+	var id = place.id;
+	e_place_desc.value = place.desc;
+	cancel = hide_dialogs;
+	okay = function() {
+		hide_elem(e_dialog_place_desc);
+		conn.send({msg:"change_place_desc", id: id, desc: e_place_desc.value}, function(r) {
+			game = r;
+			place = place_with_id(id);
+			redraw();
+			show_place();
+			hide_elem(e_glass);
+		});
+	}
+	show_elem(e_glass);
+	show_elem(e_dialog_place_desc);
+}
+
+
+edit_place_name = function() {
+	var id = place.id;
+	var name = prompt("Enter a new name for this place:", place.name);
+	if(name) {
+		conn.send({msg:"change_place_name", id: id, name: name}, function(r) {
+			game = r;
+			place = place_with_id(id);
+			redraw();
+			show_place();
+		});
+	}
+}
 
 new_place = function() {
 	conn.send({msg:"new_place"}, function(r) {

@@ -7,6 +7,9 @@ require("sleepless");
 require("g")("log5");
 
 
+require("g")(require("./common.js"));
+
+
 seq = 0;
 
 DS = require("ds").DS;
@@ -19,10 +22,10 @@ if(true) { //!ds.game) {
 		pack: [],
 		has_visited: {},
 		world: {
-			seq: 0,
+			seq: 1,
 			title: "A World",
 			places: [ {
-				id: "nowhere",
+				id: 1,
 				name: "Nowhere",
 				desc: "You see nothing.",
 				exits: [],
@@ -32,11 +35,41 @@ if(true) { //!ds.game) {
 	ds.save();
 }
 
+game = ds.game;
+
+msg_change_place_desc = function(m, name) {
+	var id = m.id;
+	var desc = m.desc;
+	var place = place_with_id(id);
+	if(place) {
+		place.desc = desc;
+		ds.save();
+		m.reply(ds.game);
+	}
+	else {
+		m.error(o2j(m));
+	}
+}
+
+msg_change_place_name = function(m, name) {
+	var id = m.id;
+	var name = m.name;
+	var place = place_with_id(id);
+	if(place) {
+		place.name = name;
+		ds.save();
+		m.reply(ds.game);
+	}
+	else {
+		m.error(o2j(m));
+	}
+}
 
 msg_new_place = function(m, name) {
-	var name = "New place #"+(ds.game.world.seq += 1);
+	var id = (ds.game.world.seq += 1);
+	var name = "New place #"+id;
 	var place = {
-		id: name.toId(),
+		id: id,
 		name: name,
 		desc: "You see nothing.",
 		exits: [],
