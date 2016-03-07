@@ -27,6 +27,7 @@
 			font-family: helvetica;
 			color: #f0f;
 			display: inline-block;
+			cursor: pointer;
 		}
 		#glass {
 			display: none;
@@ -52,6 +53,9 @@
 			text-align: center;
 			z-index: 2;
 		}
+		.nowrap {
+			white-space: nowrap;
+		}
 	</style>
 </head>
 <body>
@@ -63,16 +67,16 @@
 	<b>Title: </b><span id=title></span><br>
 	<br>
 	<b>Places: </b> <div class=edit onclick="new_place()">NEW</div> <br>
-	<div id=tpl_places class=handy><b>&nbsp;&nbsp;&nbsp;   __name__</b></div>
+	<div id=tpl_places class=handy class=nowrap><b>&nbsp;&nbsp;&nbsp;   __name__</b></div>
 
 </td><td>
 
 	<div id=show_place class=page>
 		<div id=tpl_place>
-			<b>__name__</b> <div class=edit onclick="edit_place_name(this)">EDIT</div> <br>
+			<b>__name__</b><br>
 			<br>
-			<div>__desc__</div> <div class=edit onclick="edit_place_desc(this)">EDIT</div> <br>
-			<br>
+			<div>__desc__</div>
+			<div class=edit onclick="edit_place()">EDIT</div>
 		</div>
 		<b>Exits: </b> <div class=edit onclick="new_exit()">NEW</div> <br>
 		<div id=tpl_exit class=handy> &nbsp; __name__ </div>
@@ -83,10 +87,12 @@
 
 <div id=glass></div>
 
-<div class=dialog id=dialog_place_desc>
-	<h2>Place Description</h2>
-	<textarea id=place_desc cols=70 rows=10></textarea> <br>
-	<br>
+<div class=dialog id=dialog_edit_place>
+	<b>Name:</b> <input type=text id=place_name>
+	<p>
+	<b>Description:</b><br>
+	<textarea id=place_desc cols=70 rows=10></textarea>
+	<p>
 	<input type=button value="Cancel" onclick="cancel()">
 	<input type=button value="Okay" onclick="okay()">
 </div>

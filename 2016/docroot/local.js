@@ -3,7 +3,7 @@ show_elem = function(elem) { elem.style.display = "block"; }
 hide_elem = function(elem) { elem.style.display = "none"; }
 
 e_glass = I("glass");
-e_dialog_place_desc = I("dialog_place_desc");
+e_dialog_edit_place = I("dialog_edit_place");
 e_place_name = I("place_name");
 e_place_desc = I("place_desc");
 e_show_place = I("show_place");
@@ -13,7 +13,7 @@ hide_pages = function() {
 }
 
 hide_dialogs = function() {
-	hide_elem(e_dialog_place_desc);
+	hide_elem(e_dialog_edit_place);
 	hide_elem(e_glass);
 }
 
@@ -31,14 +31,17 @@ redraw = function() {
 }
 
 
-edit_place_desc = function() {
+edit_place = function() {
 	var id = place.id;
+
+	e_place_name.value = place.name;
 	e_place_desc.value = place.desc;
+
 	cancel = hide_dialogs;
 	okay = function() {
-		hide_elem(e_dialog_place_desc);
-		conn.send({msg:"change_place_desc", id: id, desc: e_place_desc.value}, function(r) {
-			game = r;
+		hide_elem(e_dialog_edit_place);
+		conn.send({msg:"change_place_details", id: id, name: e_place_name.value, desc: e_place_desc.value}, function(r) {
+			game = r.game;
 			place = place_with_id(id);
 			redraw();
 			show_place();
@@ -46,7 +49,7 @@ edit_place_desc = function() {
 		});
 	}
 	show_elem(e_glass);
-	show_elem(e_dialog_place_desc);
+	show_elem(e_dialog_edit_place);
 }
 
 
@@ -55,7 +58,7 @@ edit_place_name = function() {
 	var name = prompt("Enter a new name for this place:", place.name);
 	if(name) {
 		conn.send({msg:"change_place_name", id: id, name: name}, function(r) {
-			game = r;
+			game = r.game;
 			place = place_with_id(id);
 			redraw();
 			show_place();
@@ -65,8 +68,10 @@ edit_place_name = function() {
 
 new_place = function() {
 	conn.send({msg:"new_place"}, function(r) {
-		game = r;
+		game = r.game;
+		place = place_with_id(r.id);
 		redraw();
+		show_place();
 	})
 }
 
@@ -117,7 +122,7 @@ cb_ctrl = function(m, x) {
 		conn.send({msg:"hello"}, function(r) {
 			log("I've been welcomed as "+r.name)
 			conn.send({msg:"load"}, function(r) {
-				game = r;
+				game = r.game;
 				redraw();
 			});
 		});

@@ -15,7 +15,7 @@ seq = 0;
 DS = require("ds").DS;
 ds = new DS();
 ds.load("world.json");
-if(true) { //!ds.game) {
+if(!ds.game) {
 	ds.game = {
 		title: "Untitled Game",
 		last_saved: 0,
@@ -37,28 +37,16 @@ if(true) { //!ds.game) {
 
 game = ds.game;
 
-msg_change_place_desc = function(m, name) {
+msg_change_place_details = function(m, name) {
 	var id = m.id;
+	var name = m.name;
 	var desc = m.desc;
 	var place = place_with_id(id);
 	if(place) {
+		place.name = name;
 		place.desc = desc;
 		ds.save();
-		m.reply(ds.game);
-	}
-	else {
-		m.error(o2j(m));
-	}
-}
-
-msg_change_place_name = function(m, name) {
-	var id = m.id;
-	var name = m.name;
-	var place = place_with_id(id);
-	if(place) {
-		place.name = name;
-		ds.save();
-		m.reply(ds.game);
+		m.reply({game:ds.game});
 	}
 	else {
 		m.error(o2j(m));
@@ -76,11 +64,11 @@ msg_new_place = function(m, name) {
 	};
 	ds.game.world.places.push(place);
 	ds.save();
-	m.reply(ds.game);
+	m.reply({game:ds.game, id:id});
 }
 
 msg_load = function(m, name) {
-	m.reply( ds.game );
+	m.reply( {game:ds.game} );
 }
 
 msg_hello = function(m, name) {
