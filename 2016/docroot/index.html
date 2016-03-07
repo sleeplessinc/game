@@ -22,6 +22,12 @@
 			border: solid 1px #dcd;
 			text-align: center;
 		}
+		div.edit {
+			font-size: 50%;
+			font-family: helvetica;
+			color: #f0f;
+			display: inline-block;
+		}
 	</style>
 </head>
 <body>
@@ -31,24 +37,20 @@
 <table><tr><td>
 
 	<b>Title: </b><span id=title></span><br>
-	<b>Last saved: </b><span id=last_saved></span><br>
 	<br>
-	<b>Places: </b><br>
-	<div id=tpl_place class=handy><b>&nbsp;&nbsp;&nbsp;   __name__</b></div>
+	<b>Places: </b> <div class=edit onclick="new_place()">NEW</div> <br>
+	<div id=tpl_places class=handy><b>&nbsp;&nbsp;&nbsp;   __name__</b></div>
 
 </td><td>
 
 	<div id=show_place class=page>
-		<div class=menu>
-			<input type=button value="Save Place" onclick="save_place()">
+		<div id=tpl_place>
+			<b>__name__</b> <div class=edit onclick="edit_place_name(this)">EDIT</div> <br>
+			<br>
+			<div>__desc__</div> <div class=edit onclick="edit_place_desc(this)">EDIT</div> <br>
+			<br>
 		</div>
-		<br>
-		<b>Place</b> <input id=place_name value=""><br>
-		<br>
-		<b>Description:</b><br>
-		<textarea id=place_desc cols=80 rows=5></textarea><br>
-		<br>
-		<b>Exits: </b> <input type=button value="New Exit" onclick="new_exit()"> <br>
+		<b>Exits: </b> <div class=edit onclick="new_exit()">NEW</div> <br>
 		<div id=tpl_exit class=handy> &nbsp; __name__ </div>
 	</div>
 

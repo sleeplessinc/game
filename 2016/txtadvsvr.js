@@ -10,14 +10,16 @@ require("g")("log5");
 seq = 0;
 
 DS = require("ds").DS;
-ds = new DS("world.json");
-if(!ds.world) {
+ds = new DS();
+ds.load("world.json");
+if(true) { //!ds.game) {
 	ds.game = {
 		title: "Untitled Game",
 		last_saved: 0,
 		pack: [],
 		has_visited: {},
 		world: {
+			seq: 0,
 			title: "A World",
 			places: [ {
 				id: "nowhere",
@@ -30,6 +32,19 @@ if(!ds.world) {
 	ds.save();
 }
 
+
+msg_new_place = function(m, name) {
+	var name = "New place #"+(ds.game.world.seq += 1);
+	var place = {
+		id: name.toId(),
+		name: name,
+		desc: "You see nothing.",
+		exits: [],
+	};
+	ds.game.world.places.push(place);
+	ds.save();
+	m.reply(ds.game);
+}
 
 msg_load = function(m, name) {
 	m.reply( ds.game );
@@ -68,6 +83,7 @@ connect = function(req, cb_accept) {
 }
 
 maws.listen( 12345, connect, "docroot")
+maws.dbg = true;
 
 
 
