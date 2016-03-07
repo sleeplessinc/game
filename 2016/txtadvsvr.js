@@ -37,6 +37,20 @@ if(!ds.game) {
 
 game = ds.game;
 
+
+msg_delete_place = function(m, name) {
+	var id = m.id;
+	var i = index_of_place_with_id(id);
+	if(i != -1) {
+		ds.game.world.places.splice(i, 1);
+		ds.save();
+		m.reply({game:ds.game});
+	}
+	else {
+		m.error(o2j(m));
+	}
+}
+
 msg_change_place_details = function(m, name) {
 	var id = m.id;
 	var name = m.name;

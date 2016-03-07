@@ -31,6 +31,18 @@ redraw = function() {
 }
 
 
+delete_place = function() {
+	var id = place.id;
+	if(confirm("Are you sure you want to delete this place named \""+place.name+"\"?")) {
+		conn.send({msg:"delete_place", id: id}, function(r) {
+			game = r.game;
+			hide_pages();
+			redraw();
+			hide_elem(e_glass);
+		});
+	}
+}
+
 edit_place = function() {
 	var id = place.id;
 
@@ -50,20 +62,7 @@ edit_place = function() {
 	}
 	show_elem(e_glass);
 	show_elem(e_dialog_edit_place);
-}
-
-
-edit_place_name = function() {
-	var id = place.id;
-	var name = prompt("Enter a new name for this place:", place.name);
-	if(name) {
-		conn.send({msg:"change_place_name", id: id, name: name}, function(r) {
-			game = r.game;
-			place = place_with_id(id);
-			redraw();
-			show_place();
-		});
-	}
+	e_place_name.select();
 }
 
 new_place = function() {
@@ -72,6 +71,7 @@ new_place = function() {
 		place = place_with_id(r.id);
 		redraw();
 		show_place();
+		edit_place();
 	})
 }
 
