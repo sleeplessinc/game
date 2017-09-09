@@ -201,7 +201,7 @@ w("<html><head>");
 w("</head><body bgcolor=#ffaaaa>");
 wbr(centered('SYSTEM RESET'));
 wbr("");
-wbr(centered("<a href=index.html> Start </a>"));
+wbr(centered("<a href=\"index.html\"> Start </a>"));
 
 
 
